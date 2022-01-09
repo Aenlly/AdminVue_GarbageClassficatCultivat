@@ -3,6 +3,9 @@ import Login from '../views/Login.vue'
 import Index from '../views/Index.vue'
 import Statistics from '../views/Statistics.vue'
 import User from '../views/User.vue'
+import IndexVideo from '../views/index/IndexVideo.vue'
+import IndexCarousel from '../views/index/IndexCarousel.vue'
+import IndexGarbage from '../views/index/IndexGarbage.vue'
 import { ElMessage } from "element-plus";
 
 const routes = [
@@ -33,6 +36,27 @@ const routes = [
         component: User,
         meta: {
           title: '用户列表'
+        }
+      }, {
+        path: '/indexVideo',
+        name: 'IndexVideo',
+        component: IndexVideo,
+        meta: {
+          title: '宣传视频管理'
+        }
+      }, {
+        path: '/indexCarousel',
+        name: 'IndexCarousel',
+        component: IndexCarousel,
+        meta: {
+          title: '轮播信息管理'
+        }
+      }, {
+        path: '/indexGarbage',
+        name: 'IndexGarbage',
+        component: IndexGarbage,
+        meta: {
+          title: '垃圾信息管理'
         }
       }
     ],
