@@ -1,6 +1,6 @@
 <template>
   <el-container direction="vertical">
-    <Head />
+    <Header />
     <el-container>
       <Aside />
       <el-container direction="vertical">
@@ -12,13 +12,13 @@
 </template>
 
 <script>
-import Head from "@/components/Head.vue";
+import Header from "@/components/Header.vue";
 import Aside from "@/components/Aside.vue";
 import Footer from "@/components/Footer.vue";
 
 export default {
   name: "Index",
-  components: { Head, Aside, Footer },
+  components: { Header, Aside, Footer },
 };
 </script>
 

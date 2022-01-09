@@ -48,7 +48,7 @@
 </template>
 
 <script>
-// import { ref } from "vue";
+import { ref } from "vue";
 // import {
 //   Location,
 //   Document,
@@ -56,17 +56,18 @@
 //   Setting,
 // } from "@element-plus/icons-vue";
 
-// const isCollapse = ref(true);
-// const handleOpen = (key: string, keyPath: string[]) => {
-//   console.log(key, keyPath);
-// };
-
-// const handleClose = (key: string, keyPath: string[]) => {
-//   console.log(key, keyPath);
-// };
+const isCollapse = ref(true);
 
 export default {
   name: "Aside",
+  methods: {
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath);
+    },
+  },
 };
 </script>
 
