@@ -15,8 +15,6 @@
           text-color="#fff"
           :collapse="isCollapse"
           :collapse-transition="false"
-          @open="handleOpen"
-          @close="handleClose"
           unique-opened
           router
         >
@@ -199,12 +197,6 @@ export default {
       console.log(activeState);
       window.sessionStorage.setItem("activeState", activeState.index);
       this.$data.activeState = activeState;
-    },
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
     },
   },
 };

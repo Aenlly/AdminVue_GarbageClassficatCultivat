@@ -1,5 +1,5 @@
 import { ElButton, ElForm, ElFormItem, ElInput } from 'element-plus'
-import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElFooter, ElAside } from 'element-plus'
+import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElFooter, ElAside, ElDivider } from 'element-plus'
 import { ElMenu, ElSubmenu, ElMenuItem, ElMenuItemGroup, ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus'
 import { ElIcon, ElImage, ElAvatar } from 'element-plus'
 // import lang from 'element-plus/lib/locale/lang/zh-cn'
@@ -14,6 +14,7 @@ export default (app) => {
   app.use(ElAside)
   app.use(ElRow)
   app.use(ElCol)
+  app.use(ElDivider)
 
   app.use(ElMenu)
   app.use(ElSubmenu)

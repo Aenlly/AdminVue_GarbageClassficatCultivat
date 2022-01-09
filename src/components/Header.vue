@@ -19,7 +19,7 @@
               <div class="name-box">
                 <span>{{ name }}</span>
               </div>
-              <hr />
+              <el-divider></el-divider>
               <el-dropdown-item>账号信息</el-dropdown-item>
               <el-dropdown-item>修改密码</el-dropdown-item>
               <el-dropdown-item @click="logout">退出登录</el-dropdown-item>

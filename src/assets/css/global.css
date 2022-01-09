@@ -17,3 +17,7 @@ body,
   width: 30px;
   line-height: 45px;
 }
+/* 修改二级菜单与以及菜单的间距 */
+.el-menu-item-group__title {
+  padding: 0px;
+}
