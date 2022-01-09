@@ -5,9 +5,9 @@
         <div class="login_box">
           <!-- 登录表单开始，ref代表表单的引用对象 -->
           <el-form ref="formRef" :model="form" :rules="loginRules">
-            <el-form-item
-              ><span class="long_title">登&nbsp;&nbsp;录</span></el-form-item
-            >
+            <el-form-item>
+              <span class="long_title"> 登&nbsp;&nbsp;录 </span>
+            </el-form-item>
             <el-form-item prop="username">
               <el-input placeholder="请输入手机号/邮箱" v-model="form.username">
                 <template #prefix>
@@ -23,16 +23,17 @@
                 placeholder="请输入密码"
                 v-model="form.password"
               >
-                <template #prefix
-                  ><el-icon class="el-input__icon" color="#9b9b9b"
-                    ><key /></el-icon
-                ></template>
+                <template #prefix>
+                  <el-icon class="el-input__icon" color="#9b9b9b">
+                    <key />
+                  </el-icon>
+                </template>
               </el-input>
             </el-form-item>
             <el-form-item>
-              <el-button class="btn_Login" type="primary" @click="login"
-                >登&nbsp;&nbsp;录</el-button
-              >
+              <el-button class="btn_Login" type="primary" @click="login">
+                登&nbsp;&nbsp;录
+              </el-button>
             </el-form-item>
           </el-form>
           <!-- 登录表单结束 -->
@@ -112,6 +113,8 @@ export default {
           this.$message.success("登录成功");
           //存储token
           window.sessionStorage.setItem("token", res.data.token);
+          window.sessionStorage.setItem("name", res.data.name);
+          window.sessionStorage.setItem("imgUrl", res.data.imgUrl);
 
           //跳转页面
           this.$router.push("/index");

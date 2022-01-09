@@ -1,9 +1,9 @@
 <template>
   <el-header>
-    <div class="header-image">
+    <div class="header-image" @click="indexClick">
       <el-image
         :src="require('../assets/logo.png')"
-        :fit="fill"
+        fit="fill"
         style="height: 100%"
       ></el-image>
       <span>垃圾分类养成后台管理系统</span>
@@ -22,7 +22,7 @@
               <hr />
               <el-dropdown-item>账号信息</el-dropdown-item>
               <el-dropdown-item>修改密码</el-dropdown-item>
-              <el-dropdown-item>退出登录</el-dropdown-item>
+              <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </div>
         </template>
@@ -36,11 +36,31 @@ export default {
   name: "Header",
   data() {
     return {
-      name: "管理员",
-      imgUrl: "https://placeimg.com/640/480/any",
+      name: window.sessionStorage.getItem("name"),
+      imgUrl: window.sessionStorage.getItem("imgUrl"),
     };
   },
   methods: {
+    //跳转首页
+    indexClick() {
+      this.$router.push("/index");
+    },
+    // 退出登录
+    logout() {
+      this.$messageBox
+        .confirm("确认退出登录？", "提示", {
+          confirmButtonText: "确认",
+          cancelButtonText: "取消",
+          type: "warning", //警告
+        })
+        .then(() => {
+          // 清空本地信息
+          window.sessionStorage.clear();
+          this.$message("退出登录成功");
+          this.$router.push("/login");
+        })
+        .catch(() => {});
+    },
     avatarMenu() {},
   },
 };
@@ -60,6 +80,7 @@ export default {
   height: 100%;
   > span {
     font-size: 20px;
+    margin-left: 15px;
   }
 }
 .menu-box {
