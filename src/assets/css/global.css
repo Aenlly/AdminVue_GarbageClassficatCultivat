@@ -1,0 +1,19 @@
+/* 去除边距 */
+* {
+  padding: 0;
+  margin: 0;
+}
+/* 让html占满全屏 */
+html,
+body,
+#app {
+  height: 100%;
+}
+.el-container {
+  height: 100%;
+}
+/* 图标样式 */
+.el-input__icon {
+  width: 30px;
+  line-height: 45px;
+}
