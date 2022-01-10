@@ -6,9 +6,9 @@
         fit="fill"
         style="height: 100%"
       ></el-image>
-      <span>垃圾分类养成后台管理系统</span>
+      <span class="hidden-xs-only">垃圾分类养成后台管理系统</span>
     </div>
-    <div>
+    <div class="hidden-xs-only">
       <el-dropdown>
         <span class="el-dropdown-link">
           <el-avatar :src="imgUrl" @click="avatarMenu" />
@@ -91,5 +91,8 @@ export default {
   color: var(--el-text-color-regular);
   outline: 0;
   text-align: center;
+  > span {
+    font-size: 20px;
+  }
 }
 </style>

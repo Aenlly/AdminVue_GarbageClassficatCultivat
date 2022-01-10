@@ -2,10 +2,12 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import installElementPlus from './plugins/element.js'
+//全局样式
 import './assets/css/global.css'
+//element断点隐藏样式
 import installElementPlusIcos from './components/ico.js'
 import axios from 'axios'
-import { ElMessage, ElMessageBox } from "element-plus";
+import locale from 'element-plus/lib/locale'
 
 axios.defaults.baseURL = 'http://localhost:8003/api/'
 
@@ -20,10 +22,7 @@ axios.interceptors.request.use(config => {
 const app = createApp(App)
 //3.0中使用该语句定义全局
 app.config.globalProperties.axios = axios
-//消息提示
-app.config.globalProperties.$message = ElMessage
-//消息提示弹出框
-app.config.globalProperties.$messageBox = ElMessageBox
+
 
 installElementPlus(app)
 installElementPlusIcos(app)

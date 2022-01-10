@@ -1,12 +1,12 @@
-import { ElButton, ElForm, ElFormItem, ElInput } from 'element-plus'
-import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElFooter, ElAside, ElDivider } from 'element-plus'
+import { ElButton, ElForm, ElFormItem, ElInput, ElSelect, ElOption } from 'element-plus'
+import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElFooter, ElAside, ElDivider, ElBreadcrumb, ElBreadcrumbItem } from 'element-plus'
 import { ElMenu, ElSubmenu, ElMenuItem, ElMenuItemGroup, ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus'
-import { ElIcon, ElImage, ElAvatar } from 'element-plus'
-// import lang from 'element-plus/lib/locale/lang/zh-cn'
-// import locale from 'element-plus/lib/locale'
+import { ElIcon, ElImage, ElAvatar, ElConfigProvider } from 'element-plus'
+import { ElCard, ElTable, ElTableColumn, ElPagination } from 'element-plus'
+import { ElMessage, ElMessageBox, ElTooltip, ElDialog } from "element-plus";
 
+// 语言配置在App.vue中
 export default (app) => {
-  // locale.use(lang)
   app.use(ElContainer)
   app.use(ElHeader)
   app.use(ElMain)
@@ -15,6 +15,8 @@ export default (app) => {
   app.use(ElRow)
   app.use(ElCol)
   app.use(ElDivider)
+  app.use(ElBreadcrumb)
+  app.use(ElBreadcrumbItem)
 
   app.use(ElMenu)
   app.use(ElSubmenu)
@@ -28,8 +30,24 @@ export default (app) => {
   app.use(ElForm)
   app.use(ElFormItem)
   app.use(ElInput)
+  app.use(ElSelect)
+  app.use(ElOption)
 
   app.use(ElIcon)
   app.use(ElImage)
   app.use(ElAvatar)
+  app.use(ElConfigProvider)
+
+  app.use(ElCard)
+  app.use(ElTable)
+  app.use(ElTableColumn)
+  app.use(ElPagination)
+
+  //消息提示
+  app.config.globalProperties.$message = ElMessage
+  //消息提示弹出框
+  app.config.globalProperties.$messageBox = ElMessageBox
+  // 文字提示
+  app.use(ElTooltip)
+  app.use(ElDialog)
 }

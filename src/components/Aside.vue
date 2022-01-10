@@ -70,7 +70,7 @@ export default {
           ico: "el-icon-house",
           children: [
             {
-              authName: "宣传视频管理",
+              authName: "视频信息管理",
               path: "indexVideo",
             },
             {

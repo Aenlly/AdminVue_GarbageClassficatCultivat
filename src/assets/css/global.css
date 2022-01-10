@@ -21,3 +21,18 @@ body,
 .el-menu-item-group__title {
   padding: 0px;
 }
+/* 面包屑样式 */
+.el-breadcrumb {
+  padding-bottom: 15px;
+}
+/* 数据展示头部样式 */
+.data-header {
+  padding-bottom: 24px;
+}
+.el-dialog__header,
+.el-form {
+  text-align: left;
+}
+.btn-box {
+  text-align: right;
+}
