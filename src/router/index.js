@@ -11,10 +11,18 @@ import { ElMessage } from "element-plus";
 const routes = [
   {
     path: '/',
-    name: 'Index',
-    component: Index,
+    name: 'Home',
+    redirect: "/index",
     meta: {
       title: '首页',
+    }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    meta: {
+      title: '登录页面',
     }
   },
   {
@@ -63,15 +71,8 @@ const routes = [
     meta: {
       title: '首页',
     }
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login,
-    meta: {
-      title: '登录页面',
-    }
   }
+
 ]
 
 const router = createRouter({

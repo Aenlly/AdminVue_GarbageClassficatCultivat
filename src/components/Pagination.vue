@@ -2,9 +2,9 @@
   <el-row class="data-footer">
     <el-col :span="24">
       <el-pagination
-        v-model:currentPage="currentPage"
         :page-sizes="[10, 20, 30, 50]"
-        :page-size="10"
+        v-model:page-size="sizes"
+        v-model:current-page="currents"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
         @size-change="handleSizeChange"
@@ -15,20 +15,35 @@
   </el-row>
 </template>
 
-<script setup>
-import { ref } from "vue";
-
-// 总数据量
-const total = 10;
-// 当前页
-const currentPage = ref(4);
-// pageSize每页数据量大小 改变时触发
-const handleSizeChange = (val) => {
-  console.log(`${val} items per page`);
-};
-// current-change，单击页码时 改变时触发
-const handleCurrentChange = (val) => {
-  console.log(`current page: ${val}`);
+<script>
+import { toRefs } from "vue";
+export default {
+  props: {
+    //当前页，每页数据量，总数量
+    current: Number,
+    size: Number,
+    total: Number,
+    getList: {
+      type: Function,
+      default: null,
+    },
+  },
+  setup(props) {
+    const { current: currents, size: sizes } = toRefs(props);
+    return { currents, sizes };
+  },
+  methods: {
+    // pageSize每页数据量大小 改变时触发
+    handleSizeChange(val) {
+      this.sizes = val;
+      this.getList(1, val);
+    },
+    // current-change，单击页码时 改变时触发
+    handleCurrentChange(val) {
+      console.log(this.sizes);
+      this.getList(val, this.sizes);
+    },
+  },
 };
 </script>
 
