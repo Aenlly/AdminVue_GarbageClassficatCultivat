@@ -23,6 +23,7 @@ const app = createApp(App)
 //3.0中使用该语句定义全局
 app.config.globalProperties.axios = axios
 
+app.config.globalProperties.$httpResource = "http://localhost:8004"
 
 installElementPlus(app)
 installElementPlusIcos(app)

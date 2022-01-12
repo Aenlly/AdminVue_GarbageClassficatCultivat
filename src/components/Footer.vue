@@ -2,9 +2,9 @@
   <el-footer>
     <el-row>
       <el-col :span="24">
-        <a href="http://beian.miit.gov.cn/">
-          <span>湘ICP备2021019196号</span>
-        </a>
+        <el-link type="info" href="http://beian.miit.gov.cn/" target="_blank">
+          湘ICP备2021019196号
+        </el-link>
       </el-col>
     </el-row>
   </el-footer>
@@ -19,13 +19,12 @@ export default {
 .el-footer {
   background-color: #dcdfe6;
 }
-a {
+.el-row,
+.el-col {
   height: 100%;
-  line-height: 60px;
-  color: #303133;
-  text-decoration: none;
 }
-a:hover {
-  color: #50a2de;
+.el-link {
+  height: 100%;
+  line-height: 100%;
 }
 </style>

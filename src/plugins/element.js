@@ -1,5 +1,5 @@
-import { ElButton, ElForm, ElFormItem, ElInput, ElSelect, ElOption } from 'element-plus'
-import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElFooter, ElAside, ElDivider, ElBreadcrumb, ElBreadcrumbItem } from 'element-plus'
+import { ElButton, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElUpload } from 'element-plus'
+import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElFooter, ElAside, ElDivider, ElBreadcrumb, ElBreadcrumbItem, ElLink } from 'element-plus'
 import { ElMenu, ElSubmenu, ElMenuItem, ElMenuItemGroup, ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus'
 import { ElIcon, ElImage, ElAvatar, ElConfigProvider } from 'element-plus'
 import { ElCard, ElTable, ElTableColumn, ElPagination } from 'element-plus'
@@ -17,6 +17,7 @@ export default (app) => {
   app.use(ElDivider)
   app.use(ElBreadcrumb)
   app.use(ElBreadcrumbItem)
+  app.use(ElLink)
 
   app.use(ElMenu)
   app.use(ElSubmenu)
@@ -32,6 +33,7 @@ export default (app) => {
   app.use(ElInput)
   app.use(ElSelect)
   app.use(ElOption)
+  app.use(ElUpload)
 
   app.use(ElIcon)
   app.use(ElImage)
