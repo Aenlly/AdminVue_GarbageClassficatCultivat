@@ -90,11 +90,7 @@ export default {
     login() {
       this.$refs.formRef.validate(async (valid) => {
         if (!valid) {
-          this.$message({
-            duration: 2000,
-            message: "账号或密码错误!",
-            type: "error",
-          });
+          this.$message.error("账号或密码错误!");
           return;
         }
         const { data: res } = await this.axios.post(

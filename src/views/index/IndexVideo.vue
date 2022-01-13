@@ -28,7 +28,7 @@
           <!-- 搜索区结束 -->
           <el-col :span="2">
             <el-button type="primary" @click="dialogCreateVisible = true">
-              新建数据
+              新增数据
             </el-button>
           </el-col>
           <el-col :span="2">
@@ -59,9 +59,10 @@
                 label="描述"
                 show-overflow-tooltip
               />
-              <el-table-column prop="videoCheck" label="状态" />
               <el-table-column prop="shareCount" label="分享数" />
-              <el-table-column label="操作" fixed="right">
+              <el-table-column prop="videoCheck" label="状态" width="80" />
+              <el-table-column prop="createTime" label="创建时间" width="160" />
+              <el-table-column label="操作" fixed="right" width="350">
                 <template #default="{ row }">
                   <el-tooltip content="置顶内容" placement="bottom">
                     <el-button
@@ -88,7 +89,14 @@
                       @click="shelf(row)"
                     ></el-button>
                   </el-tooltip>
-
+                  <el-tooltip content="查看视频" placement="bottom">
+                    <el-button
+                      type="primary"
+                      icon="el-icon-view"
+                      size="small"
+                      @click="checkVideo(row.videoUrl)"
+                    ></el-button>
+                  </el-tooltip>
                   <el-tooltip content="编辑数据" placement="bottom">
                     <el-button
                       type="primary"
@@ -122,11 +130,27 @@
       </el-card>
     </el-col>
   </el-row>
+
+  <el-dialog
+    title="查看视频"
+    v-model="dialogCheckVisible"
+    width="30%"
+    @close="dialogCheckClose"
+  >
+    <el-row style="width: 100%">
+      <el-col :span="24" style="width: 100%">
+        <video style="width: 100%" height="300" :src="checkVideoUrl" controls>
+          您的浏览器不支持视频播放
+        </video>
+      </el-col>
+    </el-row>
+  </el-dialog>
+
   <!-- 创建数据弹窗开始 -->
-  <el-dialog v-model="dialogCreateVisible" title="新建数据">
+  <el-dialog v-model="dialogCreateVisible" title="新增数据" top="5vh">
     <el-row>
       <el-col :span="12" :offset="6">
-        <el-form :model="create" :rules="createRules">
+        <el-form :model="create" ref="createForm" :rules="formRules">
           <el-form-item label="标题" prop="videoTitle">
             <el-input
               v-model="create.videoTitle"
@@ -146,20 +170,20 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="封面" prop="videoImg">
-            <!-- action上传的地址,list-type改变样式,multiple是否支持多选文件,limit允许上传的最大数量,name上传的文件字段名 -->
+            <!-- action上传的地址,list-type改变样式,multiple是否支持多选文件,accept限制上传格式,limit允许上传的最大数量,name上传的文件字段名 -->
             <el-upload
               v-model="create.videoImg"
               :action="uploadImageUrl"
               list-type="picture-card"
-              :auto-upload="false"
               :multiple="false"
-              :limit="2"
+              :limit="1"
+              accept=".jpg,.png,jpeg"
               name="imageFile"
               ref="createUploadImage"
-              :file-list="createImgList"
-              :on-change="createChangeImage"
               :on-success="createSuccessImage"
               :on-error="createErrorImage"
+              :on-exceed="createExceedImage"
+              :before-upload="uploadImage"
             >
               <template #default>
                 <el-icon><plus /></el-icon>
@@ -187,10 +211,16 @@
             <el-upload
               v-model="create.videoUrl"
               drag
-              :action="uploadVideoUrl"
+              accept=".mp4"
               name="videoFile"
+              ref="createUploadVideo"
+              :action="uploadVideoUrl"
               :multiple="false"
               :limit="1"
+              :on-success="createSuccessVideo"
+              :on-error="createErrorVideo"
+              :on-exceed="createExceedVideo"
+              :before-upload="uploadVideo"
             >
               <el-icon class="el-icon-upload"></el-icon>
               <div class="el-upload__text">
@@ -200,6 +230,16 @@
                 <div class="el-upload__tip">大小小于500MB的mp4文件</div>
               </template>
             </el-upload>
+          </el-form-item>
+          <el-form-item label="状态" prop="videoCheck">
+            <el-select v-model="create.videoCheck" placeholder="请选择状态">
+              <el-option
+                v-for="item in videoChecks"
+                :key="item.name"
+                :label="item.name"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </el-col>
@@ -216,10 +256,10 @@
   <!-- 创建数据弹窗结束 -->
 
   <!-- 编辑弹窗开始 -->
-  <el-dialog v-model="dialogEditVisible" title="编辑数据">
+  <el-dialog v-model="dialogEditVisible" title="编辑数据" top="5vh">
     <el-row>
       <el-col :span="12" :offset="6">
-        <el-form :model="edit">
+        <el-form :model="edit" :rules="formRules" ref="editForm">
           <el-form-item label="标题" prop="videoTitle">
             <el-input
               v-model="edit.videoTitle"
@@ -245,11 +285,15 @@
               :action="uploadImageUrl"
               list-type="picture-card"
               :multiple="false"
+              accept=".jpg,.png,jpeg"
+              name="imageFile"
               :limit="1"
-              :auto-upload="false"
               ref="editUploadImage"
-              :file-list="editImgList"
-              :on-change="editChangeImage"
+              :file-list="editImageList"
+              :on-success="editSuccessImage"
+              :on-error="editErrorImage"
+              :on-exceed="editExceedImage"
+              :before-upload="uploadImage"
             >
               <template #default>
                 <el-icon><plus /></el-icon>
@@ -277,9 +321,17 @@
             <el-upload
               v-model="edit.videoUrl"
               drag
-              action="uploadVideoUrl"
+              :action="uploadVideoUrl"
+              ref="editUploadVideo"
+              accept=".mp4"
+              name="videoFile"
               :multiple="false"
+              :file-list="editVideoList"
               :limit="1"
+              :on-success="editSuccessVideo"
+              :on-error="editErrorVideo"
+              :on-exceed="editExceedVideo"
+              :before-upload="uploadVideo"
             >
               <el-icon class="el-icon-upload"></el-icon>
               <div class="el-upload__text">
@@ -316,11 +368,11 @@
 </template>
 
 <script>
-import { toRef } from "@vue/reactivity";
 import Breadcrumb from "../../components/Breadcrumb.vue";
 import Pagination from "../../components/Pagination.vue";
+import qs from "qs";
 
-const createRules = {
+const formRules = {
   videoTitle: [
     {
       required: true, //必填
@@ -367,8 +419,11 @@ export default {
   components: { Breadcrumb, Pagination },
   data() {
     return {
+      httpResource: this.$httpResource,
       uploadVideoUrl: this.axios.defaults.baseURL + "video/uploadVideo", //上传视频文件地址
       uploadImageUrl: this.axios.defaults.baseURL + "video/uploadImage", //上传图片文件地址
+      editVideoList: [],
+      editImageList: [],
       videoChecks: [
         {
           name: "待发布",
@@ -394,6 +449,8 @@ export default {
       },
       queryType: "0", //查询类型
       text: "", //查询值
+      checkVideoUrl: "",
+      dialogCheckVisible: false, //查看视频的对话框
       dialogCreateVisible: false, //创建数据的对话框
       dialogEditVisible: false, //编辑数据的对话框
       selectIds: [],
@@ -404,9 +461,9 @@ export default {
         videoDesc: "",
         videoImg: "",
         videoUrl: "",
+        videoCheck: "待发布",
       },
-      createRules: createRules,
-      createImgList: [],
+      formRules: formRules, //创建弹窗的验证规则
     };
   },
   created() {
@@ -434,6 +491,15 @@ export default {
       } else {
         this.$message.error("请求数据失败");
       }
+    },
+
+    checkVideo(videoUrl) {
+      this.dialogCheckVisible = true;
+      this.checkVideoUrl = this.httpResource + videoUrl;
+      console.log(this.checkVideoUrl);
+    },
+    dialogCheckClose() {
+      this.checkVideoUrl = null;
     },
     // 选择时触发事件
     handleSelectionChange(val) {
@@ -516,8 +582,23 @@ export default {
     },
     // 编辑按钮触发事件
     editById(row) {
-      console.log(row);
-      this.edit = row;
+      // 深拷贝，使其不改变表格中的内容
+      this.edit = qs.parse(qs.stringify(row));
+      // 在字段中删除创建时间与分享量
+      delete this.edit.createTime;
+      delete this.edit.shareCount;
+      const videoImg = row.videoImg.split("/");
+      const videoUrl = row.videoUrl.split("/");
+      // 显示的图片
+      this.editImageList[0] = {
+        name: videoImg[videoImg.length - 1],
+        url: row.videoImg,
+      };
+      // 显示的视频文件
+      this.editVideoList[0] = {
+        name: videoUrl[videoUrl.length - 1].slice(-10),
+        url: row.videoUrl,
+      };
       this.dialogEditVisible = true;
     },
     // 删除按钮触发事件
@@ -535,7 +616,7 @@ export default {
               id: id,
             },
           });
-          if ((res.code = 200)) {
+          if (res.code == 200) {
             this.$message.success("删除成功!");
             this.getList(this.data.current, this.data.size);
           } else {
@@ -544,84 +625,252 @@ export default {
         })
         .catch(() => {});
     },
-    // 新建弹窗添加图片，上传成功，上传失败触发事件
-    createChangeImage(file, fileList) {
-      // 判断数组第一个的文件名是否与选择的文件名相同，不相同则
-      if (fileList[0].name != file.name) {
-        this.$messageBox
-          .confirm("确定覆盖前一个文件?", "警告", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-          })
-          .then(() => {
-            this.$message.success("操作成功");
-            // 删除前一个文件文件
-            this.$refs.createUploadImage.handleRemove(fileList[0]);
-            this.$refs.createUploadImage.submit();
-          })
-          .catch(() => {
-            if (fileList.length > 1) {
-              this.$refs.createUploadImage.handleRemove(fileList[1]);
-            }
-          });
-      } else {
-        if (fileList.length > 1) {
-          this.$refs.createUploadImage.handleRemove(fileList[0]);
-        }
-        this.$refs.createUploadImage.submit();
-      }
-    },
-    // 新建弹窗上传图片成功触发事件
+
+    /**新增数据所需方法开始 */
+    // 新建数据弹窗上传图片成功触发事件
     createSuccessImage(response, file, fileList) {
-      console.log(file);
       if (response.code == 200) {
-        file.url = this.$httpResource + response.data;
+        file.url = this.httpResource + response.data;
+        this.create.videoImg = response.data;
         this.$message.success("上传图片成功");
       } else {
         this.$message.error("上传图片失败");
       }
     },
-    // 上传图片失败触发事件
+    // 新建数据弹窗上传图片失败触发事件
     createErrorImage(err, file, fileList) {
       this.$message.error("上传图片失败");
     },
-    // 新建弹窗中的文件略缩图删除触发事件
+    //新增数据弹窗中上传图片超出数量限制时触发事件
+    createExceedImage(files, fileList) {
+      this.$messageBox
+        .confirm("确定覆盖前一个文件?", "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+        .then(() => {
+          this.create.videoImg = null;
+          // 先清除原来的文件
+          this.$refs.createUploadImage.handleRemove(fileList[0]);
+          // 再添加选择的文件
+          this.$refs.createUploadImage.handleStart(files[0]);
+          // 进行上传
+          this.$refs.createUploadImage.submit();
+        })
+        .catch(() => {
+          this.$message.error("操作失败");
+        });
+    },
+    // 新增数据弹窗中的文件略缩图删除触发事件
     createHandleRemoveImage(file) {
       // 删除该文件
       this.$refs.createUploadImage.handleRemove(file);
     },
-    // 编辑弹窗保存图片、上传成功、上传失败触发事件
-    editChangeImage() {
-      if (fileList[0].name != file.name) {
-        this.$messageBox
-          .confirm("确定覆盖前一个文件?", "警告", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-          })
-          .then(() => {
-            this.$message.success("操作成功");
-            // 删除前一个文件文件
-            this.$refs.editUploadImage.handleRemove(fileList[0]);
-            this.$refs.editUploadImage.submit();
-          })
-          .catch(() => {
-            if (fileList.length > 1) {
-              this.$refs.editUploadImage.handleRemove(fileList[1]);
-            }
-          });
+
+    // 新增数据弹窗上传图片成功触发事件
+    createSuccessVideo(response, file, fileList) {
+      if (response.code == 200) {
+        file.url = this.httpResource + response.data;
+        this.create.videoUrl = response.data;
+        this.$message.success("上传视频成功");
       } else {
-        this.$refs.editUploadImage.submit();
+        this.$message.error("上传视频失败");
       }
     },
-    // 新建确认按钮事件
-    onCreate() {},
+    // 新增数据弹窗上传图片失败触发事件
+    createErrorVideo(err, file, fileList) {
+      if (file.size > 1024 * 1024 * 500) {
+        this.$message.error("视频超出500MB大小");
+      } else {
+        this.$message.error("上传视频失败,请检查文件是否符合标准");
+      }
+    },
+    // 新增数据弹窗中上传图片超出数量限制时触发事件
+    createExceedVideo(files, fileList) {
+      this.$messageBox
+        .confirm("确定覆盖前一个文件?", "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+        .then(() => {
+          this.create.videoUrl = null;
+          // 先清除原来的文件
+          this.$refs.createUploadVideo.handleRemove(fileList[0]);
+          // 再添加选择的文件
+          this.$refs.createUploadVideo.handleStart(files[0]);
+          // 进行上传
+          this.$refs.createUploadVideo.submit();
+        })
+        .catch(() => {
+          this.$message.error("操作失败");
+        });
+    },
+
+    // 新增数据弹窗确认按钮事件
+    onCreate() {
+      this.$refs.createForm.validate(async (valid) => {
+        if (!valid) {
+          this.$message.error("请填写正确信息!");
+          return;
+        } else {
+          const { data: res } = await this.axios.post(
+            "video/createVideo",
+            qs.stringify(this.create)
+          );
+          if (res.code == 200) {
+            this.$message.success("新增数据成功!");
+            if (res.data == true) {
+              this.dialogCreateVisible = false;
+              // 重置表单与清除上传的文件
+              this.$refs.createForm.resetFields();
+              this.$refs.createUploadImage.clearFiles();
+              this.$refs.createUploadVideo.clearFiles();
+              this.quearyBy();
+              return;
+            }
+          }
+          this.$message.error("新增数据失败!");
+        }
+      });
+    },
+    /**新增数据所需方法结束 */
+    /**
+     * 上传前所需判断的方法 开始
+     */
+    // 上传前验证图片格式。避免出现格式选择错误
+    uploadImage(file) {
+      const typeList = ["jpg", "JPG", "jpeg", "JPEG", "png", "PNG"];
+      // file.type.split分割格式
+      if (typeList.indexOf(file.type.split("/")[1]) < 0) {
+        this.$message.error("文件格式不符合!");
+        return false;
+      }
+    },
+    // 上传前验证视频格式。避免出现格式选择错误
+    uploadVideo(file) {
+      const typeList = ["mp4", "MP4"];
+      // file.type.split分割格式
+      if (typeList.indexOf(file.type.split("/")[1]) < 0) {
+        this.$message.error("文件格式不符合!");
+        return false;
+      }
+    },
+    /**
+     * 上传前所需判断的方法 结束
+     */
+
+    // 编辑数据所需方法开始
+    // 新建数据弹窗上传图片成功触发事件
+    editSuccessImage(response, file, fileList) {
+      if (response.code == 200) {
+        file.url = this.httpResource + response.data;
+        this.edit.videoImg = response.data;
+        this.$message.success("上传图片成功");
+      } else {
+        this.$message.error("上传图片失败");
+      }
+    },
+    // 新建数据弹窗上传图片失败触发事件
+    editErrorImage(err, file, fileList) {
+      this.$message.error("上传图片失败");
+    },
+    // 编辑窗体中上传图片超出数量限制时触发事件
+    editExceedImage(files, fileList) {
+      this.$messageBox
+        .confirm("确定覆盖前一个文件?", "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+        .then(() => {
+          // 先清除原来的文件
+          this.$refs.editUploadImage.handleRemove(fileList[0]);
+          // 再添加选择的文件
+          this.$refs.editUploadImage.handleStart(files[0]);
+          // 进行上传
+          this.$refs.editUploadImage.submit();
+        })
+        .catch(() => {
+          this.$message.error("操作失败");
+        });
+    },
+
+    // 新增数据弹窗中的文件略缩图删除触发事件
+    editHandleRemoveImage(file) {
+      // 删除该文件
+      this.$refs.createUploadImage.handleRemove(file);
+    },
+
+    // 新增数据弹窗上传图片成功触发事件
+    editSuccessVideo(response, file, fileList) {
+      if (response.code == 200) {
+        file.url = this.httpResource + response.data;
+        this.edit.videoUrl = response.data;
+        this.$message.success("上传视频成功");
+      } else {
+        this.$message.error("上传视频失败");
+      }
+    },
+    // 新增数据弹窗上传图片失败触发事件
+    editErrorVideo(err, file, fileList) {
+      if (file.size > 1024 * 1024 * 500) {
+        this.$message.error("视频超出500MB大小");
+      } else {
+        this.$message.error("上传视频失败,请检查文件是否符合标准");
+      }
+    },
+    // 新增数据弹窗中上传图片超出数量限制时触发事件
+    editExceedVideo(files, fileList) {
+      this.$messageBox
+        .confirm("确定覆盖前一个文件?", "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+        .then(() => {
+          this.create.videoUrl = null;
+          // 先清除原来的文件
+          this.$refs.editUploadVideo.handleRemove(fileList[0]);
+          // 再添加选择的文件
+          this.$refs.editUploadVideo.handleStart(files[0]);
+          this.$message.success("操作成功");
+          // 进行上传
+          this.$refs.editUploadVideo.submit();
+        })
+        .catch(() => {});
+    },
+
     // 编辑确认按钮事件
-    onEdit() {},
+    onEdit() {
+      // 校验表单
+      this.$refs.editForm.validate(async (valid) => {
+        if (!valid) {
+          this.$message.error("请填写正确信息!");
+          return;
+        } else {
+          const { data: res } = await this.axios.put(
+            "video/updateVideo",
+            qs.stringify(this.edit)
+          );
+          if (res.code == 200) {
+            if (res.data === true) {
+              this.$message.success("编辑数据成功!");
+              // 关闭弹窗
+              this.dialogEditVisible = false;
+              // 刷新数据
+              this.quearyBy();
+              return;
+            }
+          }
+          this.$message.error("编辑数据失败!");
+        }
+      });
+    },
   },
 };
 </script>
 
-<style>
+<style lang="less" scoped>
 </style>

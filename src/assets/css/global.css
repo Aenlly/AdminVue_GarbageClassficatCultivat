@@ -36,3 +36,8 @@ body,
 .btn-box {
   text-align: right;
 }
+
+/* 去除上传动画 */
+.el-upload-list__item {
+  transition: none !important;
+}

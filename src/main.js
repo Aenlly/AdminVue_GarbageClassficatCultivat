@@ -4,10 +4,12 @@ import router from './router'
 import installElementPlus from './plugins/element.js'
 //全局样式
 import './assets/css/global.css'
+//引入第三方图标
+import './assets/icon/iconfont.css'
 //element断点隐藏样式
 import installElementPlusIcos from './components/ico.js'
 import axios from 'axios'
-import locale from 'element-plus/lib/locale'
+
 
 axios.defaults.baseURL = 'http://localhost:8003/api/'
 
