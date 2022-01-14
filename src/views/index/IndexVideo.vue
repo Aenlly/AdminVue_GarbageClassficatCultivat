@@ -2,6 +2,7 @@
   <Breadcrumb :infoTitles="breadcrumb" />
   <el-row>
     <el-col :span="24">
+      <!-- 卡片开始 -->
       <el-card class="box-card">
         <!-- 数据区域容器开始 -->
         <el-row class="data-header">
@@ -19,7 +20,7 @@
                 </el-select>
               </template>
               <template #append>
-                <el-button @click="quearyBy">
+                <el-button @click="queryBy">
                   <el-icon><search /></el-icon>
                 </el-button>
               </template>
@@ -125,12 +126,14 @@
           :current="data.current"
           :size="data.size"
           :total="data.total"
-          :getList="getList"
+          :getTableList="getTableList"
         />
       </el-card>
+      <!-- 卡片结束 -->
     </el-col>
   </el-row>
 
+  <!-- 视频播放弹窗开始 -->
   <el-dialog
     title="查看视频"
     v-model="dialogCheckVisible"
@@ -145,6 +148,7 @@
       </el-col>
     </el-row>
   </el-dialog>
+  <!-- 视频播放弹窗结束 -->
 
   <!-- 创建数据弹窗开始 -->
   <el-dialog v-model="dialogCreateVisible" title="新增数据" top="5vh">
@@ -308,7 +312,7 @@
                   <span class="el-upload-list__item-actions">
                     <span
                       class="el-upload-list__item-delete"
-                      @click="createHandleRemoveImage(file)"
+                      @click="editHandleRemoveImage(file)"
                     >
                       <el-icon><delete /></el-icon>
                     </span>
@@ -372,6 +376,7 @@ import Breadcrumb from "../../components/Breadcrumb.vue";
 import Pagination from "../../components/Pagination.vue";
 import qs from "qs";
 
+// 校验规则
 const formRules = {
   videoTitle: [
     {
@@ -393,7 +398,7 @@ const formRules = {
       trigger: "blur", //鼠标离开时触发
     },
     {
-      min: 0, //最小长度
+      min: 1, //最小长度
       max: 200, //最大长度
       message: "长度在 1 至 200 个字符", //提示
       trigger: "blur",
@@ -422,6 +427,11 @@ export default {
       httpResource: this.$httpResource,
       uploadVideoUrl: this.axios.defaults.baseURL + "video/uploadVideo", //上传视频文件地址
       uploadImageUrl: this.axios.defaults.baseURL + "video/uploadImage", //上传图片文件地址
+      getListUrl: "/video/getVideoList", //获取的数据的后台接口
+      delByIdsUrl: "/video/delVideoByIds", //批量删除的后台接口
+      delByIdUrl: "/video/delVideoById", //单一删除数据的后台接口
+      createUrl: "video/createVideo", //新增数据的后台接口
+      updateUrl: "video/updateVideo", //修改数据的后台接口
       editVideoList: [],
       editImageList: [],
       videoChecks: [
@@ -448,7 +458,7 @@ export default {
         total: 200,
       },
       queryType: "0", //查询类型
-      text: "", //查询值
+      text: "", //查询内容
       checkVideoUrl: "",
       dialogCheckVisible: false, //查看视频的对话框
       dialogCreateVisible: false, //创建数据的对话框
@@ -467,17 +477,17 @@ export default {
     };
   },
   created() {
-    this.getList(this.data.current, this.data.size);
+    this.getTableList(this.data.current, this.data.size);
   },
 
   methods: {
     // 根据条件查询数据
-    quearyBy() {
-      this.getList(this.data.current, this.data.size);
+    queryBy() {
+      this.getTableList(this.data.current, this.data.size);
     },
     // 查询数据
-    async getList(current, size) {
-      const { data: res } = await this.axios.get("/video/getVideoList", {
+    async getTableList(current, size) {
+      const { data: res } = await this.axios.get(this.getListUrl, {
         params: {
           current: current,
           size: size,
@@ -488,16 +498,23 @@ export default {
       // 返回码进行判断
       if (res.code == 200) {
         this.$data.data = res.data;
+        this.$message({
+          message: "请求数据成功",
+          duration: 1500,
+          type: "success",
+          "show-close": true,
+        });
       } else {
         this.$message.error("请求数据失败");
       }
     },
-
+    // 查看视频弹窗事件
     checkVideo(videoUrl) {
       this.dialogCheckVisible = true;
       this.checkVideoUrl = this.httpResource + videoUrl;
       console.log(this.checkVideoUrl);
     },
+    // 查看视频弹窗关闭事件
     dialogCheckClose() {
       this.checkVideoUrl = null;
     },
@@ -513,7 +530,7 @@ export default {
     // current-change，单击页码时 改变时触发
     handleCurrentChange(current) {
       this.current = current;
-      this.getList();
+      this.queryBy();
     },
 
     // 删除所选触发批量删除事件
@@ -528,15 +545,12 @@ export default {
             type: "warning",
           })
           .then(async () => {
-            const { data: res } = await this.axios.delete(
-              "/video/delVideoByIds",
-              {
-                data: this.selectIds,
-              }
-            );
+            const { data: res } = await this.axios.delete(this.delByIdsUrl, {
+              data: this.selectIds,
+            });
             if ((res.code = 200)) {
               this.$message.success("删除成功!");
-              this.getList(this.data.current, this.data.size);
+              this.queryBy();
             } else {
               this.$message.error("删除失败!");
             }
@@ -575,7 +589,7 @@ export default {
       const { data: res } = await this.axios.put("/video" + url + "/" + id);
       if ((res.code = 200)) {
         this.$message.success(msg);
-        this.getList(this.data.current, this.data.size);
+        this.queryBy();
       } else {
         this.$message.error("设置失败!");
       }
@@ -592,12 +606,12 @@ export default {
       // 显示的图片
       this.editImageList[0] = {
         name: videoImg[videoImg.length - 1],
-        url: row.videoImg,
+        url: this.httpResource + row.videoImg,
       };
       // 显示的视频文件
       this.editVideoList[0] = {
         name: videoUrl[videoUrl.length - 1].slice(-10),
-        url: row.videoUrl,
+        url: this.httpResource + row.videoUrl,
       };
       this.dialogEditVisible = true;
     },
@@ -611,14 +625,14 @@ export default {
           type: "warning",
         })
         .then(async () => {
-          const { data: res } = await this.axios.delete("/video/delVideoById", {
+          const { data: res } = await this.axios.delete(this.delByIdUrl, {
             params: {
               id: id,
             },
           });
           if (res.code == 200) {
             this.$message.success("删除成功!");
-            this.getList(this.data.current, this.data.size);
+            this.queryBy();
           } else {
             this.$message.error("删除失败!");
           }
@@ -655,12 +669,11 @@ export default {
           this.$refs.createUploadImage.handleRemove(fileList[0]);
           // 再添加选择的文件
           this.$refs.createUploadImage.handleStart(files[0]);
+           this.$message.success("操作成功");
           // 进行上传
           this.$refs.createUploadImage.submit();
         })
-        .catch(() => {
-          this.$message.error("操作失败");
-        });
+        .catch(() => {});
     },
     // 新增数据弹窗中的文件略缩图删除触发事件
     createHandleRemoveImage(file) {
@@ -668,7 +681,7 @@ export default {
       this.$refs.createUploadImage.handleRemove(file);
     },
 
-    // 新增数据弹窗上传图片成功触发事件
+    // 新增数据弹窗上传视频文件成功触发事件
     createSuccessVideo(response, file, fileList) {
       if (response.code == 200) {
         file.url = this.httpResource + response.data;
@@ -678,7 +691,7 @@ export default {
         this.$message.error("上传视频失败");
       }
     },
-    // 新增数据弹窗上传图片失败触发事件
+    // 新增数据弹窗上传视频文件失败触发事件
     createErrorVideo(err, file, fileList) {
       if (file.size > 1024 * 1024 * 500) {
         this.$message.error("视频超出500MB大小");
@@ -686,7 +699,7 @@ export default {
         this.$message.error("上传视频失败,请检查文件是否符合标准");
       }
     },
-    // 新增数据弹窗中上传图片超出数量限制时触发事件
+    // 新增数据弹窗中上传视频文件超出数量限制时触发事件
     createExceedVideo(files, fileList) {
       this.$messageBox
         .confirm("确定覆盖前一个文件?", "警告", {
@@ -700,12 +713,11 @@ export default {
           this.$refs.createUploadVideo.handleRemove(fileList[0]);
           // 再添加选择的文件
           this.$refs.createUploadVideo.handleStart(files[0]);
+          this.$message.success("操作成功");
           // 进行上传
           this.$refs.createUploadVideo.submit();
         })
-        .catch(() => {
-          this.$message.error("操作失败");
-        });
+        .catch(() => {});
     },
 
     // 新增数据弹窗确认按钮事件
@@ -716,7 +728,7 @@ export default {
           return;
         } else {
           const { data: res } = await this.axios.post(
-            "video/createVideo",
+            this.createUrl,
             qs.stringify(this.create)
           );
           if (res.code == 200) {
@@ -727,7 +739,7 @@ export default {
               this.$refs.createForm.resetFields();
               this.$refs.createUploadImage.clearFiles();
               this.$refs.createUploadVideo.clearFiles();
-              this.quearyBy();
+              this.queryBy();
               return;
             }
           }
@@ -762,7 +774,7 @@ export default {
      */
 
     // 编辑数据所需方法开始
-    // 新建数据弹窗上传图片成功触发事件
+    // 编辑数据弹窗上传图片成功触发事件
     editSuccessImage(response, file, fileList) {
       if (response.code == 200) {
         file.url = this.httpResource + response.data;
@@ -772,7 +784,7 @@ export default {
         this.$message.error("上传图片失败");
       }
     },
-    // 新建数据弹窗上传图片失败触发事件
+    // 编辑数据弹窗上传图片失败触发事件
     editErrorImage(err, file, fileList) {
       this.$message.error("上传图片失败");
     },
@@ -785,25 +797,25 @@ export default {
           type: "warning",
         })
         .then(() => {
+          this.create.videoImg = null;
           // 先清除原来的文件
           this.$refs.editUploadImage.handleRemove(fileList[0]);
+          this.$message.success("操作成功");
           // 再添加选择的文件
           this.$refs.editUploadImage.handleStart(files[0]);
           // 进行上传
           this.$refs.editUploadImage.submit();
         })
-        .catch(() => {
-          this.$message.error("操作失败");
-        });
+        .catch(() => {});
     },
 
-    // 新增数据弹窗中的文件略缩图删除触发事件
+    // 编辑数据弹窗中的文件略缩图删除触发事件
     editHandleRemoveImage(file) {
       // 删除该文件
-      this.$refs.createUploadImage.handleRemove(file);
+      this.$refs.editUploadImage.handleRemove(file);
     },
 
-    // 新增数据弹窗上传图片成功触发事件
+    // 编辑数据弹窗上传视频文件成功触发事件
     editSuccessVideo(response, file, fileList) {
       if (response.code == 200) {
         file.url = this.httpResource + response.data;
@@ -813,7 +825,7 @@ export default {
         this.$message.error("上传视频失败");
       }
     },
-    // 新增数据弹窗上传图片失败触发事件
+    // 编辑数据弹窗上传视频文件失败触发事件
     editErrorVideo(err, file, fileList) {
       if (file.size > 1024 * 1024 * 500) {
         this.$message.error("视频超出500MB大小");
@@ -821,7 +833,7 @@ export default {
         this.$message.error("上传视频失败,请检查文件是否符合标准");
       }
     },
-    // 新增数据弹窗中上传图片超出数量限制时触发事件
+    // 编辑数据弹窗中上传视频文件超出数量限制时触发事件
     editExceedVideo(files, fileList) {
       this.$messageBox
         .confirm("确定覆盖前一个文件?", "警告", {
@@ -851,7 +863,7 @@ export default {
           return;
         } else {
           const { data: res } = await this.axios.put(
-            "video/updateVideo",
+            this.updateUrl,
             qs.stringify(this.edit)
           );
           if (res.code == 200) {
@@ -860,7 +872,7 @@ export default {
               // 关闭弹窗
               this.dialogEditVisible = false;
               // 刷新数据
-              this.quearyBy();
+              this.queryBy();
               return;
             }
           }

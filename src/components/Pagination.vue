@@ -23,7 +23,7 @@ export default {
     current: Number,
     size: Number,
     total: Number,
-    getList: {
+    getTableList: {
       type: Function,
       default: null,
     },
@@ -36,12 +36,11 @@ export default {
     // pageSize每页数据量大小 改变时触发
     handleSizeChange(val) {
       this.sizes = val;
-      this.getList(1, val);
+      this.getTableList(1, val);
     },
     // current-change，单击页码时 改变时触发
     handleCurrentChange(val) {
-      console.log(this.sizes);
-      this.getList(val, this.sizes);
+      this.getTableList(val, this.sizes);
     },
   },
 };
