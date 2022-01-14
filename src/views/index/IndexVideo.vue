@@ -60,6 +60,18 @@
                 label="描述"
                 show-overflow-tooltip
               />
+              <el-table-column label="封面" width="150">
+                <template #default="{ row }">
+                  <el-tooltip content="单击预览" placement="bottom">
+                    <el-image
+                      :src="httpResource + row.videoImg"
+                      style="height: 80px"
+                      :preview-src-list="[httpResource + row.videoImg]"
+                      fit="contain"
+                    ></el-image>
+                  </el-tooltip>
+                </template>
+              </el-table-column>
               <el-table-column prop="shareCount" label="分享数" />
               <el-table-column prop="videoCheck" label="状态" width="80" />
               <el-table-column prop="createTime" label="创建时间" width="160" />
@@ -181,7 +193,7 @@
               list-type="picture-card"
               :multiple="false"
               :limit="1"
-              accept=".jpg,.png,jpeg"
+              accept=".jpg,.png,.jpeg"
               name="imageFile"
               ref="createUploadImage"
               :on-success="createSuccessImage"
@@ -208,6 +220,9 @@
                     </span>
                   </span>
                 </div>
+              </template>
+              <template #tip>
+                <div class="el-upload__tip">仅支持jpg/jpeg/png格式图片</div>
               </template>
             </el-upload>
           </el-form-item>
@@ -289,7 +304,7 @@
               :action="uploadImageUrl"
               list-type="picture-card"
               :multiple="false"
-              accept=".jpg,.png,jpeg"
+              accept=".jpg,.png,.jpeg"
               name="imageFile"
               :limit="1"
               ref="editUploadImage"
@@ -318,6 +333,9 @@
                     </span>
                   </span>
                 </div>
+              </template>
+              <template #tip>
+                <div class="el-upload__tip">仅支持jpg/jpeg/png格式图片</div>
               </template>
             </el-upload>
           </el-form-item>
@@ -363,7 +381,7 @@
     <template #footer>
       <span>
         <el-button @click="dialogEditVisible = false">取消</el-button>
-        <el-button type="primary" @click="onEdit">确认</el-button>
+        <el-button type="primary" @click="onEdit">保存</el-button>
       </span>
     </template>
     <!-- 编辑弹窗底部区域 -->
@@ -424,14 +442,15 @@ export default {
   components: { Breadcrumb, Pagination },
   data() {
     return {
+      breadcrumb: [{ name: "首页信息管理" }, { name: "视频信息管理" }],
       httpResource: this.$httpResource,
       uploadVideoUrl: this.axios.defaults.baseURL + "video/uploadVideo", //上传视频文件地址
       uploadImageUrl: this.axios.defaults.baseURL + "video/uploadImage", //上传图片文件地址
-      getListUrl: "/video/getVideoList", //获取的数据的后台接口
-      delByIdsUrl: "/video/delVideoByIds", //批量删除的后台接口
-      delByIdUrl: "/video/delVideoById", //单一删除数据的后台接口
-      createUrl: "video/createVideo", //新增数据的后台接口
-      updateUrl: "video/updateVideo", //修改数据的后台接口
+      getListUrl: "/video/getList", //获取的数据的后台接口
+      delByIdsUrl: "/video/delByIds", //批量删除的后台接口
+      delByIdUrl: "/video/delById", //单一删除数据的后台接口
+      createUrl: "video/create", //新增数据的后台接口
+      updateUrl: "video/update", //修改数据的后台接口
       editVideoList: [],
       editImageList: [],
       videoChecks: [
@@ -452,19 +471,13 @@ export default {
           value: 2,
         },
       ],
-      data: {
-        current: 1, //当前页
-        size: 10, //每页数据量
-        total: 200,
-      },
       queryType: "0", //查询类型
       text: "", //查询内容
-      checkVideoUrl: "",
+      checkVideoUrl: "", //查看的视频url地址
       dialogCheckVisible: false, //查看视频的对话框
       dialogCreateVisible: false, //创建数据的对话框
       dialogEditVisible: false, //编辑数据的对话框
       selectIds: [],
-      breadcrumb: [{ name: "首页信息管理" }, { name: "视频信息管理" }],
       edit: {},
       create: {
         videoTitle: "",
@@ -474,8 +487,14 @@ export default {
         videoCheck: "待发布",
       },
       formRules: formRules, //创建弹窗的验证规则
+      data: {
+        current: 1, //当前页
+        size: 10, //每页数据量
+        total: 0, //总数据量
+      },
     };
   },
+  // 在创建实例之后调用的钩子，所以用来初始化数据
   created() {
     this.getTableList(this.data.current, this.data.size);
   },
@@ -565,7 +584,7 @@ export default {
       if (row.videoCheck === "置顶") {
         this.$message.warning("该数据已是置顶状态!");
       } else {
-        this.updateCheck("/putTop", row.videoId, "置顶成功");
+        this.updateCheck("/top", row.videoId, "置顶成功");
       }
     },
     // 发布按钮触发事件
@@ -573,7 +592,7 @@ export default {
       if (row.videoCheck === "已发布") {
         this.$message.warning("该数据已是发布状态!");
       } else {
-        this.updateCheck("/putPublish", row.videoId, "发布成功");
+        this.updateCheck("/publish", row.videoId, "发布成功");
       }
     },
     // 下线按钮触发事件
@@ -581,7 +600,7 @@ export default {
       if (row.videoCheck === "已下线") {
         this.$message.warning("该数据已是下线状态!");
       } else {
-        this.updateCheck("/putShelf", row.videoId, "下线成功");
+        this.updateCheck("/shelf", row.videoId, "下线成功");
       }
     },
     // 更改状态方法
@@ -669,7 +688,7 @@ export default {
           this.$refs.createUploadImage.handleRemove(fileList[0]);
           // 再添加选择的文件
           this.$refs.createUploadImage.handleStart(files[0]);
-           this.$message.success("操作成功");
+          this.$message.success("操作成功");
           // 进行上传
           this.$refs.createUploadImage.submit();
         })
@@ -797,7 +816,7 @@ export default {
           type: "warning",
         })
         .then(() => {
-          this.create.videoImg = null;
+          this.edit.videoImg = null;
           // 先清除原来的文件
           this.$refs.editUploadImage.handleRemove(fileList[0]);
           this.$message.success("操作成功");
@@ -842,7 +861,7 @@ export default {
           type: "warning",
         })
         .then(() => {
-          this.create.videoUrl = null;
+          this.edit.videoUrl = null;
           // 先清除原来的文件
           this.$refs.editUploadVideo.handleRemove(fileList[0]);
           // 再添加选择的文件
@@ -868,7 +887,7 @@ export default {
           );
           if (res.code == 200) {
             if (res.data === true) {
-              this.$message.success("编辑数据成功!");
+              this.$message.success("保存数据成功!");
               // 关闭弹窗
               this.dialogEditVisible = false;
               // 刷新数据
@@ -876,7 +895,7 @@ export default {
               return;
             }
           }
-          this.$message.error("编辑数据失败!");
+          this.$message.error("保存数据失败!");
         }
       });
     },

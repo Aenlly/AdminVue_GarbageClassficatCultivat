@@ -3,7 +3,7 @@ import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElFooter, ElAside, ElDivid
 import { ElMenu, ElSubmenu, ElMenuItem, ElMenuItemGroup, ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus'
 import { ElIcon, ElImage, ElAvatar, ElConfigProvider } from 'element-plus'
 import { ElCard, ElTable, ElTableColumn, ElPagination } from 'element-plus'
-import { ElMessage, ElMessageBox, ElTooltip, ElDialog } from "element-plus";
+import { ElMessage, ElMessageBox, ElTooltip, ElDialog, ElTag, ElPopover } from "element-plus";
 
 // 语言配置在App.vue中
 export default (app) => {
@@ -52,4 +52,6 @@ export default (app) => {
   // 文字提示
   app.use(ElTooltip)
   app.use(ElDialog)
+  app.use(ElPopover)
+  app.use(ElTag)
 }

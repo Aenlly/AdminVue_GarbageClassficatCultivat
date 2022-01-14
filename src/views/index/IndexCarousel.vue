@@ -56,12 +56,16 @@
                   >
                 </template>
               </el-table-column>
-              <el-table-column label="图片">
+              <el-table-column label="图片" width="150">
                 <template #default="{ row }">
-                  <el-image
-                    :src="httpResource + row.imgUrl"
-                    fit="contain"
-                  ></el-image>
+                  <el-tooltip content="单击预览" placement="bottom">
+                    <el-image
+                      :src="httpResource + row.imgUrl"
+                      :preview-src-list="[httpResource + row.imgUrl]"
+                      alt="单击预览"
+                      fit="contain"
+                    ></el-image>
+                  </el-tooltip>
                 </template>
               </el-table-column>
               <el-table-column prop="showFlag" label="状态" width="50" />
@@ -149,7 +153,7 @@
               list-type="picture-card"
               :multiple="false"
               :limit="1"
-              accept=".jpg,.png,jpeg"
+              accept=".jpg,.png,.jpeg"
               name="imageFile"
               ref="createUploadImage"
               :on-success="createSuccessImage"
@@ -162,11 +166,7 @@
               </template>
               <template #file="{ file }">
                 <div>
-                  <img
-                    class="el-upload-list__item-thumbnail"
-                    :src="file.url"
-                    alt=""
-                  />
+                  <img class="el-upload-list__item-thumbnail" :src="file.url" />
                   <span class="el-upload-list__item-actions">
                     <span
                       class="el-upload-list__item-delete"
@@ -176,6 +176,9 @@
                     </span>
                   </span>
                 </div>
+              </template>
+              <template #tip>
+                <div class="el-upload__tip">仅支持jpg/jpeg/png格式图片</div>
               </template>
             </el-upload>
           </el-form-item>
@@ -221,7 +224,7 @@
               :action="uploadImageUrl"
               list-type="picture-card"
               :multiple="false"
-              accept=".jpg,.png,jpeg"
+              accept=".jpg,.png,.jpeg"
               name="imageFile"
               :limit="1"
               ref="editUploadImage"
@@ -247,6 +250,9 @@
                   </span>
                 </div>
               </template>
+              <template #tip>
+                <div class="el-upload__tip">仅支持jpg/jpeg/png格式图片</div>
+              </template>
             </el-upload>
           </el-form-item>
         </el-form>
@@ -256,7 +262,7 @@
     <template #footer>
       <span>
         <el-button @click="dialogEditVisible = false">取消</el-button>
-        <el-button type="primary" @click="onEdit">确认</el-button>
+        <el-button type="primary" @click="onEdit">保存</el-button>
       </span>
     </template>
     <!-- 编辑弹窗底部区域 -->
@@ -332,10 +338,11 @@ export default {
       data: {
         current: 1, //当前页
         size: 10, //每页数据量
-        total: 200,
+        total: 0, //总数据量
       },
     };
   },
+  // 在创建实例之后调用的钩子，所以用来初始化数据
   created() {
     this.getTableList(this.data.current, this.data.size);
   },
@@ -619,7 +626,7 @@ export default {
           );
           if (res.code == 200) {
             if (res.data === true) {
-              this.$message.success("编辑数据成功!");
+              this.$message.success("保存数据成功!");
               // 关闭弹窗
               this.dialogEditVisible = false;
               // 刷新数据
@@ -627,7 +634,7 @@ export default {
               return;
             }
           }
-          this.$message.error("编辑数据失败!");
+          this.$message.error("保存数据失败!");
         }
       });
     },

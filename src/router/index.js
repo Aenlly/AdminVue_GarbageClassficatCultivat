@@ -5,7 +5,8 @@ import Statistics from '../views/Statistics.vue'
 import User from '../views/User.vue'
 import IndexVideo from '../views/index/IndexVideo.vue'
 import IndexCarousel from '../views/index/IndexCarousel.vue'
-import IndexGarbage from '../views/index/IndexGarbage.vue'
+import IndexGarbageType from '../views/index/IndexGarbageType.vue'
+import IndexGarbageList from '../views/index/IndexGarbageList.vue'
 import { ElMessage } from "element-plus";
 
 const routes = [
@@ -29,6 +30,9 @@ const routes = [
     path: '/index',
     name: 'Index',
     component: Index,
+    meta: {
+      title: '首页',
+    },
     children: [
       {
         path: '/statistics',
@@ -60,17 +64,23 @@ const routes = [
           title: '轮播信息管理'
         }
       }, {
-        path: '/indexGarbage',
-        name: 'IndexGarbage',
-        component: IndexGarbage,
+        path: '/indexGarbageType',
+        name: 'indexGarbageType',
+        component: IndexGarbageType,
         meta: {
-          title: '垃圾信息管理'
+          title: '垃圾类型管理'
         }
+      },
+      {
+        path: '/indexGarbageList',
+        name: 'indexGarbageList',
+        component: IndexGarbageList,
+        meta: {
+          title: '垃圾类型数据列表'
+        },
       }
+
     ],
-    meta: {
-      title: '首页',
-    }
   }
 
 ]

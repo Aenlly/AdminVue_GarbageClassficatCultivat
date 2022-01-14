@@ -78,8 +78,8 @@ export default {
               path: "indexCarousel",
             },
             {
-              authName: "垃圾信息管理",
-              path: "indexGarbage",
+              authName: "垃圾类型管理",
+              path: "IndexGarbageType",
             },
           ],
         },

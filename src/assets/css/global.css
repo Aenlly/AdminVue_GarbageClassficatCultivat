@@ -41,3 +41,7 @@ body,
 .el-upload-list__item {
   transition: none !important;
 }
+/* 设置表单的内容行间距 */
+.el-form-item__content {
+  line-height: normal;
+}
