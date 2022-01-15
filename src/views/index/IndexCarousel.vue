@@ -377,7 +377,7 @@ export default {
     // 选择时触发事件
     handleSelectionChange(val) {
       // 统计所选id
-      this.selectIds = val.map((item) => item.videoId);
+      this.selectIds = val.map((item) => item.carouselId);
     },
     // pageSize每页数据量大小 改变时触发
     handleSizeChange(size) {

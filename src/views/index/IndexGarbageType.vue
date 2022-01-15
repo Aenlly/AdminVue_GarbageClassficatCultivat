@@ -19,7 +19,6 @@
             <el-table
               :data="data.records"
               style="width: 100%"
-              @selection-change="handleSelectionChange"
               max-height="620"
               border
               stripe
@@ -51,13 +50,13 @@
               />
               <el-table-column
                 label="图标"
-                width="55"
                 class-name="tableImageUrl"
+                width="55px"
               >
                 <template #default="{ row }">
                   <el-image
                     :src="httpResource + row.imgUrl"
-                    :style="'background-color:' + row.bgColor"
+                    :style="'background-color:' + row.bgColor + ';height:35px'"
                   ></el-image>
                 </template>
               </el-table-column>
@@ -80,7 +79,15 @@
                       type="primary"
                       icon="el-icon-s-unfold"
                       size="small"
-                      @click="this.$router.push('/indexGarbageList')"
+                      @click="
+                        this.$router.push({
+                          path: '/indexGarbageList',
+                          query: {
+                            garbageTypeName: row.garbageType,
+                            belongId: row.garbageId,
+                          },
+                        })
+                      "
                     ></el-button>
                   </el-tooltip>
                   <el-tooltip content="编辑数据" placement="bottom">

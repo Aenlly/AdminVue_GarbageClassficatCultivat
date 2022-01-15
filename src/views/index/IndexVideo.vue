@@ -162,7 +162,7 @@
   </el-dialog>
   <!-- 视频播放弹窗结束 -->
 
-  <!-- 创建数据弹窗开始 -->
+  <!-- 新增数据弹窗开始 -->
   <el-dialog v-model="dialogCreateVisible" title="新增数据" top="5vh">
     <el-row>
       <el-col :span="12" :offset="6">
@@ -272,7 +272,7 @@
     </template>
     <!-- 创建弹窗底部区域 -->
   </el-dialog>
-  <!-- 创建数据弹窗结束 -->
+  <!-- 新增数据弹窗结束 -->
 
   <!-- 编辑弹窗开始 -->
   <el-dialog v-model="dialogEditVisible" title="编辑数据" top="5vh">
@@ -579,6 +579,7 @@ export default {
         this.$message.warning("请先选择数据!");
       }
     },
+
     // 置顶按钮触发事件
     top(row) {
       if (row.videoCheck === "置顶") {

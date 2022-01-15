@@ -120,16 +120,6 @@ export default {
           ],
         },
         {
-          authName: "公益视频管理",
-          ico: "el-icon-video-camera",
-          children: [
-            {
-              authName: "视频管理",
-              path: "video",
-            },
-          ],
-        },
-        {
           authName: "变废为宝管理",
           ico: "el-icon-receiving",
           children: [

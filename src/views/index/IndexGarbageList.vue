@@ -42,18 +42,23 @@
             >
               <el-table-column type="selection" width="55" />
               <el-table-column fixed type="index" label="序号" width="60" />
+
+              <el-table-column label="所属垃圾类型" show-overflow-tooltip>
+                <template #default>
+                  {{ garbageTypeName }}
+                </template>
+              </el-table-column>
               <el-table-column
-                prop="textTitle"
+                prop="garbageName"
                 label="名称"
                 show-overflow-tooltip
               />
-              <el-table-column
-                label="图标"
-                width="55"
-                class-name="tableImageUrl"
-              >
+              <el-table-column label="图标" class-name="tableImageUrl">
                 <template #default="{ row }">
-                  <el-image :src="httpResource + row.imgUrl"></el-image>
+                  <el-image
+                    :src="httpResource + row.imgUrl"
+                    style="height: 35px"
+                  ></el-image>
                 </template>
               </el-table-column>
               <el-table-column label="操作" fixed="right" width="120">
@@ -72,7 +77,7 @@
                       type="danger"
                       icon="el-icon-delete"
                       size="small"
-                      @click="deleteById(row.carouselId)"
+                      @click="deleteById(row.id)"
                     ></el-button>
                   </el-tooltip>
                 </template>
@@ -93,25 +98,84 @@
     </el-col>
   </el-row>
 
-  <!-- 视频播放弹窗开始 -->
-  <el-dialog
-    title="查看视频"
-    v-model="dialogCheckVisible"
-    width="30%"
-    @close="dialogCheckClose"
-  >
-    <el-row style="width: 100%">
-      <el-col :span="24" style="width: 100%">
-        <video style="width: 100%" height="300" :src="checkVideoUrl" controls>
-          您的浏览器不支持视频播放
-        </video>
+  <!-- 新增数据弹窗开始 -->
+  <el-dialog v-model="dialogCreateVisible" title="新增数据">
+    <el-row>
+      <el-col :span="12" :offset="6">
+        <el-form
+          :model="create"
+          ref="createForm"
+          :rules="formRules"
+          label-position="right"
+          label-width="100px"
+        >
+          <el-form-item label="垃圾名称" prop="garbageName">
+            <el-input
+              v-model="create.garbageName"
+              placeholder="请输入垃圾名称"
+              show-word-limit
+              maxlength="5"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="垃圾图标" prop="imgUrl">
+            <!-- action上传的地址,list-type改变样式,multiple是否支持多选文件,accept限制上传格式,limit允许上传的最大数量,name上传的文件字段名 -->
+            <el-upload
+              v-model="create.imgUrl"
+              :action="uploadImageUrl"
+              list-type="picture-card"
+              :multiple="false"
+              :limit="1"
+              accept=".png"
+              name="imageFile"
+              ref="createUploadImage"
+              :on-success="createSuccessImage"
+              :on-error="createErrorImage"
+              :on-exceed="createExceedImage"
+              :before-upload="uploadImage"
+            >
+              <template #default>
+                <el-icon><plus /></el-icon>
+              </template>
+              <template #file="{ file }">
+                <div>
+                  <img
+                    class="el-upload-list__item-thumbnail"
+                    :src="file.url"
+                    alt=""
+                  />
+                  <span class="el-upload-list__item-actions">
+                    <span
+                      class="el-upload-list__item-delete"
+                      @click="createHandleRemoveImage(file)"
+                    >
+                      <el-icon><delete /></el-icon>
+                    </span>
+                  </span>
+                </div>
+              </template>
+              <template #tip>
+                <div class="el-upload__tip">
+                  仅支持png格式图片,建议54*54像素
+                </div>
+              </template>
+            </el-upload>
+          </el-form-item>
+        </el-form>
       </el-col>
     </el-row>
+    <!-- 创建弹窗底部区域 -->
+    <template #footer>
+      <span>
+        <el-button @click="dialogCreateVisible = false">取消</el-button>
+        <el-button type="primary" @click="onCreate">确认</el-button>
+      </span>
+    </template>
+    <!-- 创建弹窗底部区域 -->
   </el-dialog>
-  <!-- 视频播放弹窗结束 -->
+  <!-- 新增数据弹窗结束 -->
 
   <!-- 编辑弹窗开始 -->
-  <el-dialog v-model="dialogEditVisible" title="编辑数据" top="5vh">
+  <el-dialog v-model="dialogEditVisible" title="编辑数据">
     <el-row>
       <el-col :span="12" :offset="6">
         <el-form
@@ -119,43 +183,17 @@
           :rules="formRules"
           ref="editForm"
           label-position="right"
-          label-width="70px"
+          label-width="100px"
         >
-          <el-form-item label="中文名" prop="videoTitle">
+          <el-form-item label="垃圾名称" prop="garbageName">
             <el-input
-              v-model="edit.nameCn"
-              placeholder="请输入垃圾类型中文名"
+              v-model="edit.garbageName"
+              placeholder="请输入垃圾名称"
               show-word-limit
-              maxlength="50"
+              maxlength="5"
             ></el-input>
           </el-form-item>
-          <el-form-item label="英文名" prop="videoTitle">
-            <el-input
-              v-model="edit.nameEn"
-              placeholder="请输入垃圾类型英文名"
-              show-word-limit
-              maxlength="50"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="标题" prop="textTitle">
-            <el-input
-              v-model="edit.textTitle"
-              placeholder="请输入垃圾类型标题"
-              show-word-limit
-              maxlength="50"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="描述" prop="textDesc">
-            <el-input
-              v-model="edit.textDesc"
-              maxlength="200"
-              :autosize="{ minRows: 2, maxRows: 4 }"
-              type="textarea"
-              show-word-limit
-              placeholder="请输入垃圾类型描述"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="封面" prop="imgUrl">
+          <el-form-item label="垃圾图标" prop="imgUrl">
             <!-- action上传的地址,list-type改变样式,multiple是否支持多选文件,limit允许上传的最大数量 -->
             <el-upload
               v-model="edit.imgUrl"
@@ -194,33 +232,8 @@
               </template>
               <template #tip>
                 <div class="el-upload__tip">
-                  仅支持png/ico格式图片,建议72*72像素
+                  仅支持png格式图片,建议54*54像素
                 </div>
-              </template>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="视频" prop="videoUrl">
-            <el-upload
-              v-model="edit.videoUrl"
-              drag
-              :action="uploadVideoUrl"
-              ref="editUploadVideo"
-              accept=".mp4"
-              name="videoFile"
-              :multiple="false"
-              :file-list="editVideoList"
-              :limit="1"
-              :on-success="editSuccessVideo"
-              :on-error="editErrorVideo"
-              :on-exceed="editExceedVideo"
-              :before-upload="uploadVideo"
-            >
-              <el-icon class="el-icon-upload"></el-icon>
-              <div class="el-upload__text">
-                拖拽文件到此处或<em>点击上传</em>
-              </div>
-              <template #tip>
-                <div class="el-upload__tip">大小小于500MB的mp4文件</div>
               </template>
             </el-upload>
           </el-form-item>
@@ -246,49 +259,23 @@ import qs from "qs";
 
 // 校验规则
 const formRules = {
-  nameCn: [
+  garbageName: [
     {
       required: true, //必填
-      message: "请输入垃圾类型中文名", //提示
+      message: "请输入垃圾名称", //提示
       trigger: "blur", //鼠标离开时触发
     },
     {
       min: 1, //最小长度
-      max: 50, //最大长度
-      message: "长度在 1 至 50 个字符", //提示
-      trigger: "blur",
-    },
-  ],
-  nameEn: [
-    {
-      required: true, //必填
-      message: "请输入垃圾类型英文名", //提示
-      trigger: "blur", //鼠标离开时触发
-    },
-    {
-      min: 1, //最小长度
-      max: 50, //最大长度
-      message: "长度在 1 至 50 个字符", //提示
-      trigger: "blur",
-    },
-  ],
-  textTitle: [
-    {
-      required: true, //必填
-      message: "请输入垃圾类型标题", //提示
-      trigger: "blur", //鼠标离开时触发
-    },
-    {
-      min: 1, //最小长度
-      max: 50, //最大长度
-      message: "长度在 1 至 50 个字符", //提示
+      max: 5, //最大长度
+      message: "长度在 1 至 5 个字符", //提示
       trigger: "blur",
     },
   ],
   imgUrl: [
     {
       required: true, //必填
-      message: "请上传图标", //提示
+      message: "请上传垃圾图标", //提示
       trigger: "blur", //鼠标离开时触发
     },
   ],
@@ -298,18 +285,27 @@ export default {
   components: { Breadcrumb, Pagination },
   data() {
     return {
+      garbageTypeName: this.$route.query.garbageTypeName, //上一页面传值所属垃圾类型名称
+      belongId: this.$route.query.belongId, //上一页面传值所属垃圾类型id
       breadcrumb: [{ name: "首页信息管理" }, { name: "垃圾类型管理" }],
       httpResource: this.$httpResource,
-      uploadVideoUrl: this.axios.defaults.baseURL + "garbage/uploadVideo", //上传视频文件地址
-      uploadImageUrl: this.axios.defaults.baseURL + "garbage/uploadImage", //上传图片文件地址
-      getListUrl: "/garbage/getList", //获取的数据的后台接口
-      updateUrl: "garbage/update", //修改数据的后台接口
+      uploadImageUrl: this.axios.defaults.baseURL + "garbage-list/uploadImage", //上传图片文件地址
+      getListUrl: "/garbage-list/getList", //获取的数据的后台接口
+      delByIdsUrl: "/garbage-list/delByIds", //批量删除的后台接口
+      delByIdUrl: "/garbage-list/delById", //单一删除数据的后台接口
+      createUrl: "garbage-list/create", //新增数据的后台接口
+      updateUrl: "garbage-list/update", //修改数据的后台接口
       editVideoList: [],
       editImageList: [],
+      text: "", //查询内容
       checkVideoUrl: "", //查看的视频url地址
-      dialogCheckVisible: false, //查看视频的对话框
+      dialogCreateVisible: false, //创建数据的对话框
       dialogEditVisible: false, //编辑数据的对话框
       selectIds: [],
+      create: {
+        garbageName: "",
+        imgUrl: "",
+      },
       edit: {},
       formRules: formRules, //创建弹窗的验证规则
       data: {
@@ -334,7 +330,7 @@ export default {
         params: {
           current: current,
           size: size,
-          queryType: this.queryType,
+          belongId: this.belongId,
           text: this.text,
         },
       });
@@ -351,10 +347,11 @@ export default {
         this.$message.error("请求数据失败");
       }
     },
+
     // 选择时触发事件
     handleSelectionChange(val) {
       // 统计所选id
-      this.selectIds = val.map((item) => item.videoId);
+      this.selectIds = val.map((item) => item.id);
     },
     // pageSize每页数据量大小 改变时触发
     handleSizeChange(size) {
@@ -365,6 +362,35 @@ export default {
       this.current = current;
       this.queryBy();
     },
+
+    // 删除所选触发批量删除事件
+    deleteByIds() {
+      //判断是否选择了数据
+      if (this.selectIds.length > 0) {
+        // 二次确认提示
+        this.$messageBox
+          .confirm("确认删除所选数据?", "警告", {
+            confirmButtonText: "确认",
+            cancelButtonText: "取消",
+            type: "warning",
+          })
+          .then(async () => {
+            const { data: res } = await this.axios.delete(this.delByIdsUrl, {
+              data: this.selectIds,
+            });
+            if ((res.code = 200)) {
+              this.$message.success("删除成功!");
+              this.queryBy();
+            } else {
+              this.$message.error("删除失败!");
+            }
+          })
+          .catch(() => {});
+      } else {
+        this.$message.warning("请先选择数据!");
+      }
+    },
+
     // 编辑按钮触发事件
     editById(row) {
       // 深拷贝，使其不改变表格中的内容
@@ -380,20 +406,111 @@ export default {
         name: imgUrl[imgUrl.length - 1],
         url: this.httpResource + row.imgUrl,
       };
-      // 编辑弹窗显示的视频
-      this.editVideoList[0] = {
-        name: videoUrl[videoUrl.length - 1].slice(-10),
-        url: this.httpResource + row.videoUrl,
-      };
       this.dialogEditVisible = true;
     },
+
+    // 删除按钮触发事件
+    deleteById(id) {
+      // 二次确认提示
+      this.$messageBox
+        .confirm("确认删除所选数据?", "警告", {
+          confirmButtonText: "确认",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+        .then(async () => {
+          const { data: res } = await this.axios.delete(this.delByIdUrl, {
+            params: {
+              id: id,
+            },
+          });
+          if (res.code == 200) {
+            this.$message.success("删除成功!");
+            this.queryBy();
+          } else {
+            this.$message.error("删除失败!");
+          }
+        })
+        .catch(() => {});
+    },
+
+    /**新增数据所需方法开始 */
+    // 新建数据弹窗上传图片成功触发事件
+    createSuccessImage(response, file, fileList) {
+      if (response.code == 200) {
+        file.url = this.httpResource + response.data;
+        this.create.imgUrl = response.data;
+        this.$message.success("上传图片成功");
+      } else {
+        this.$message.error("上传图片失败");
+      }
+    },
+    // 新建数据弹窗上传图片失败触发事件
+    createErrorImage(err, file, fileList) {
+      this.$message.error("上传图片失败");
+    },
+    //新增数据弹窗中上传图片超出数量限制时触发事件
+    createExceedImage(files, fileList) {
+      this.$messageBox
+        .confirm("确定覆盖前一个文件?", "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+        .then(() => {
+          this.create.videoImg = null;
+          // 先清除原来的文件
+          this.$refs.createUploadImage.handleRemove(fileList[0]);
+          // 再添加选择的文件
+          this.$refs.createUploadImage.handleStart(files[0]);
+          this.$message.success("操作成功");
+          // 进行上传
+          this.$refs.createUploadImage.submit();
+        })
+        .catch(() => {});
+    },
+    // 新增数据弹窗中的文件略缩图删除触发事件
+    createHandleRemoveImage(file) {
+      // 删除该文件
+      this.$refs.createUploadImage.handleRemove(file);
+    },
+
+    // 新增数据弹窗确认按钮事件
+    onCreate() {
+      this.$refs.createForm.validate(async (valid) => {
+        if (!valid) {
+          this.$message.error("请填写正确信息!");
+          return;
+        } else {
+          // 设置所属垃圾类型Id
+          this.create.garbageId = this.belongId;
+          const { data: res } = await this.axios.post(
+            this.createUrl,
+            qs.stringify(this.create)
+          );
+          if (res.code == 200) {
+            this.$message.success("新增数据成功!");
+            if (res.data == true) {
+              this.dialogCreateVisible = false;
+              // 重置表单与清除上传的文件
+              this.$refs.createForm.resetFields();
+              this.$refs.createUploadImage.clearFiles();
+              this.queryBy();
+              return;
+            }
+          }
+          this.$message.error("新增数据失败!");
+        }
+      });
+    },
+    /**新增数据所需方法结束 */
 
     /**
      * 上传前所需判断的方法 开始
      */
     // 上传前验证图片格式。避免出现格式选择错误
     uploadImage(file) {
-      const typeList = ["png", "PNG", "ico", "ICO"];
+      const typeList = ["png", "PNG"];
       // file.type.split分割格式
       if (typeList.indexOf(file.type.split("/")[1]) < 0) {
         this.$message.error("文件格式不符合!");
