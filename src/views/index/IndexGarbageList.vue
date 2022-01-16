@@ -353,15 +353,6 @@ export default {
       // 统计所选id
       this.selectIds = val.map((item) => item.id);
     },
-    // pageSize每页数据量大小 改变时触发
-    handleSizeChange(size) {
-      this.size = size;
-    },
-    // current-change，单击页码时 改变时触发
-    handleCurrentChange(current) {
-      this.current = current;
-      this.queryBy();
-    },
 
     // 删除所选触发批量删除事件
     deleteByIds() {

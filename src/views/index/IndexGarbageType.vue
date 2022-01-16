@@ -394,15 +394,6 @@ export default {
         this.$message.error("请求数据失败");
       }
     },
-    // pageSize每页数据量大小 改变时触发
-    handleSizeChange(size) {
-      this.size = size;
-    },
-    // current-change，单击页码时 改变时触发
-    handleCurrentChange(current) {
-      this.current = current;
-      this.queryBy();
-    },
     // 查看视频弹窗事件
     checkVideo(videoUrl) {
       this.dialogCheckVisible = true;

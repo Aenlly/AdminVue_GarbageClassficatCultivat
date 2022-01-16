@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Login from '../views/Login.vue'
 import Index from '../views/Index.vue'
 import Statistics from '../views/Statistics.vue'
-import User from '../views/User.vue'
+import UserList from '../views/user/userList.vue'
 import IndexVideo from '../views/index/IndexVideo.vue'
 import IndexCarousel from '../views/index/IndexCarousel.vue'
 import IndexGarbageType from '../views/index/IndexGarbageType.vue'
@@ -39,15 +39,15 @@ const routes = [
         name: 'Statistics',
         component: Statistics,
         meta: {
-          title: '数据统计'
+          title: '数据信息统计'
         }
       },
       {
-        path: '/user',
-        name: 'User',
-        component: User,
+        path: '/userList',
+        name: 'UserList',
+        component: UserList,
         meta: {
-          title: '用户列表'
+          title: '用户信息列表'
         }
       }, {
         path: '/indexVideo',

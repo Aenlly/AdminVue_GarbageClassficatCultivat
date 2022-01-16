@@ -62,7 +62,7 @@ export default {
         {
           authName: "用户信息列表",
           ico: "el-icon-user",
-          path: "user",
+          path: "userList",
           children: [],
         },
         {

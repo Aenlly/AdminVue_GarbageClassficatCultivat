@@ -23,79 +23,32 @@
               border
               stripe
             >
-              <el-table-column label="垃圾类型" width="100">
-                <template #default="scope">
-                  <el-popover effect="light" trigger="hover" placement="top">
-                    <template #default>
-                      <p>中文名: {{ scope.row.nameCn }}</p>
-                      <p>英文名: {{ scope.row.nameEn }}</p>
-                    </template>
-                    <template #reference>
-                      <div class="name-wrapper">
-                        <el-tag>{{ scope.row.garbageType }}</el-tag>
-                      </div>
-                    </template>
-                  </el-popover>
-                </template>
-              </el-table-column>
+              <el-table-column prop="userId" label="用户编号" />
               <el-table-column
-                prop="textTitle"
-                label="标题"
+                prop="nickName"
+                label="用户昵称"
                 show-overflow-tooltip
               />
-              <el-table-column
-                prop="textDesc"
-                label="描述"
-                show-overflow-tooltip
-              />
-              <el-table-column
-                label="图标"
-                class-name="tableImageUrl"
-                width="55px"
-              >
+              <el-table-column prop="accumulativePoints" label="累积积分" />
+              <el-table-column prop="answerPoints" label="答题积分" />
+              <el-table-column prop="remainingPoints" label="剩余积分" />
+              <el-table-column prop="pointsName" label="头衔名称" />
+              <el-table-column label="操作" fixed="right" width="120">
                 <template #default="{ row }">
-                  <el-image
-                    :src="httpResource + row.imgUrl"
-                    :style="'background-color:' + row.bgColor + ';height:35px'"
-                  ></el-image>
-                </template>
-              </el-table-column>
-              <el-table-column label="视频" width="80">
-                <template #default="{ row }">
-                  <el-tooltip content="查看视频" placement="bottom">
+                  <el-tooltip content="查看用户订单记录" placement="bottom">
+                    <el-button
+                      type="primary"
+                      icon="el-icon-s-order"
+                      size="small"
+                      @click="orderView(row.userId)"
+                    ></el-button>
+                  </el-tooltip>
+                  <el-tooltip content="查看用户积分记录" placement="bottom">
                     <el-button
                       type="primary"
                       icon="el-icon-view"
                       size="small"
-                      @click="checkVideo(row.videoUrl)"
-                    ></el-button>
-                  </el-tooltip>
-                </template>
-              </el-table-column>
-              <el-table-column label="操作" fixed="right" width="120">
-                <template #default="{ row }">
-                  <el-tooltip content="查看所属垃圾类型数据" placement="bottom">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-s-unfold"
-                      size="small"
-                      @click="
-                        this.$router.push({
-                          path: '/indexGarbageList',
-                          query: {
-                            garbageTypeName: row.garbageType,
-                            belongId: row.garbageId,
-                          },
-                        })
-                      "
-                    ></el-button>
-                  </el-tooltip>
-                  <el-tooltip content="编辑数据" placement="bottom">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-edit"
-                      size="small"
-                      @click="editById(row)"
+                      @click="pointsView(row.userId)"
                     ></el-button>
                   </el-tooltip>
                 </template>
@@ -115,6 +68,62 @@
       <!-- 卡片结束 -->
     </el-col>
   </el-row>
+
+  <!-- 订单记录弹窗开始 -->
+  <el-dialog v-model="dialogOrderViewVisible" title="订单记录" top="10vh">
+    <el-row>
+      <el-col :span="24">
+        <el-table :data="orderData.records" max-height="550" border stripe>
+          <el-table-column label="订单编号" prop="orderId"></el-table-column>
+          <el-table-column label="礼品名称" prop="giftName"></el-table-column>
+          <el-table-column label="兑换码" prop="code"></el-table-column>
+          <el-table-column label="核销状态" width="80">
+            <template #default="{ row }">
+              <el-tag>{{ row.state }}</el-tag>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- 数据页码组件，需要调用显示页的方法 -->
+        <Pagination
+          :current="orderData.current"
+          :size="orderData.size"
+          :total="orderData.total"
+          :getTableList="getOrderTableList"
+        />
+      </el-col>
+    </el-row>
+  </el-dialog>
+  <!-- 订单记录弹窗结束 -->
+
+  <!-- 积分记录弹窗开始 -->
+  <el-dialog v-model="dialogPointsVisible" title="积分记录" top="10vh">
+    <el-row>
+      <el-col :span="24">
+        <el-table :data="pointsData.records" max-height="630" border stripe>
+          <el-table-column
+            label="序号"
+            type="index"
+            width="50"
+          ></el-table-column>
+          <el-table-column label="订单描述" prop="logDesc"></el-table-column>
+          <el-table-column label="积分变动" prop="number"></el-table-column>
+          <el-table-column label="变动状态" width="80">
+            <template #default="{ row }">
+              <el-tag>{{ row.type }}</el-tag>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- 数据页码组件，需要调用显示页的方法 -->
+        <Pagination
+          :current="pointsData.current"
+          :size="pointsData.size"
+          :total="pointsData.total"
+          :getTableList="getPointsTableList"
+        />
+      </el-col>
+    </el-row>
+  </el-dialog>
+  <!-- 积分记录弹窗结束 -->
 </template>
 
 <script>
@@ -125,13 +134,29 @@ export default {
   components: { Breadcrumb, Pagination },
   data() {
     return {
-      breadcrumb: [{ name: "首页信息管理" }, { name: "垃圾类型管理" }],
+      breadcrumb: [{ name: "用户信息列表" }],
       getListUrl: "/user/getList", //获取的数据的后台接口
+      getOrderListByIdUrl: "/user/getOrderListById", //获取单个用户订单的数据的后台接口
+      getPointsListByIdUrl: "/user/getPointsListById", //获取单个用户积分记录的数据的后台接口
+      dialogOrderViewVisible: false, //查看订单记录的对话框
+      dialogPointsVisible: false, //创建积分记录的对话框
+      text: "", //查询内容
       data: {
         current: 1, //当前页
         size: 10, //每页数据量
         total: 0, //总数据量
       },
+      orderData: {
+        current: 1, //当前页
+        size: 10, //每页数据量
+        total: 0, //总数据量
+      },
+      pointsData: {
+        current: 1, //当前页
+        size: 10, //每页数据量
+        total: 0, //总数据量
+      },
+      id: "",
     };
   },
   // 在创建实例之后调用的钩子，所以用来初始化数据
@@ -149,7 +174,6 @@ export default {
         params: {
           current: current,
           size: size,
-          queryType: this.queryType,
           text: this.text,
         },
       });
@@ -166,14 +190,57 @@ export default {
         this.$message.error("请求数据失败");
       }
     },
-    // pageSize每页数据量大小 改变时触发
-    handleSizeChange(size) {
-      this.size = size;
+    orderView(id) {
+      this.id = id;
+      this.dialogOrderViewVisible = true;
+      this.getOrderTableList(this.orderData.current, this.orderData.size);
     },
-    // current-change，单击页码时 改变时触发
-    handleCurrentChange(current) {
-      this.current = current;
-      this.queryBy();
+    async getOrderTableList(current, size) {
+      const { data: res } = await this.axios.get(this.getOrderListByIdUrl, {
+        params: {
+          current: current,
+          size: size,
+          id: this.id,
+        },
+      });
+      // 返回码进行判断
+      if (res.code == 200) {
+        this.$data.orderData = res.data;
+        this.$message({
+          message: "请求数据成功",
+          duration: 1500,
+          type: "success",
+          "show-close": true,
+        });
+      } else {
+        this.$message.error("请求数据失败");
+      }
+    },
+    pointsView(id) {
+      this.id = id;
+      this.dialogPointsVisible = true;
+      this.getPointsTableList(this.pointsData.current, this.pointsData.size);
+    },
+    async getPointsTableList(current, size) {
+      const { data: res } = await this.axios.get(this.getPointsListByIdUrl, {
+        params: {
+          current: current,
+          size: size,
+          id: this.id,
+        },
+      });
+      // 返回码进行判断
+      if (res.code == 200) {
+        this.$data.pointsData = res.data;
+        this.$message({
+          message: "请求数据成功",
+          duration: 1500,
+          type: "success",
+          "show-close": true,
+        });
+      } else {
+        this.$message.error("请求数据失败");
+      }
     },
   },
 };
