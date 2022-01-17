@@ -7,7 +7,7 @@ import IndexVideo from '../views/index/IndexVideo.vue'
 import IndexCarousel from '../views/index/IndexCarousel.vue'
 import IndexGarbageType from '../views/index/IndexGarbageType.vue'
 import IndexGarbageList from '../views/index/IndexGarbageList.vue'
-
+import GiftManage from '../views/gift/GiftManage.vue'
 import GiftOrders from '../views/gift/GiftOrders.vue'
 import { ElMessage } from "element-plus";
 
@@ -84,7 +84,7 @@ const routes = [
       {
         path: '/giftManage',
         name: 'GiftManage',
-        component: IndexGarbageList,
+        component: GiftManage,
         meta: {
           title: '礼品信息管理'
         },

@@ -446,7 +446,7 @@ export default {
       httpResource: this.$httpResource,
       uploadVideoUrl: this.axios.defaults.baseURL + "video/uploadVideo", //上传视频文件地址
       uploadImageUrl: this.axios.defaults.baseURL + "video/uploadImage", //上传图片文件地址
-      getListUrl: "/video/getList", //获取的数据的后台接口
+      getListUrl: "/video/getList", //获取数据的后台接口
       delByIdsUrl: "/video/delByIds", //批量删除的后台接口
       delByIdUrl: "/video/delById", //单一删除数据的后台接口
       createUrl: "video/create", //新增数据的后台接口
