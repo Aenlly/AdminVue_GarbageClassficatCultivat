@@ -7,7 +7,16 @@
         <!-- 数据区域容器开始 -->
         <el-row class="data-header">
           <!-- 搜索区开始 -->
-          <el-col :span="6"> </el-col>
+          <el-col :span="6">
+            <el-input v-model="text" placeholder="请输入搜索内容">
+              <template #prepend> 用户昵称 </template>
+              <template #append>
+                <el-button @click="queryBy">
+                  <el-icon><search /></el-icon>
+                </el-button>
+              </template>
+            </el-input>
+          </el-col>
           <!-- 搜索区结束 -->
           <el-col :span="2"> </el-col>
           <el-col :span="2"> </el-col>
@@ -161,11 +170,12 @@ export default {
   },
   // 在创建实例之后调用的钩子，所以用来初始化数据
   created() {
-    this.getTableList(this.data.current, this.data.size);
+    this.queryBy();
   },
   methods: {
     // 根据条件查询数据
     queryBy() {
+      this.data.current = 1;
       this.getTableList(this.data.current, this.data.size);
     },
     // 查询数据

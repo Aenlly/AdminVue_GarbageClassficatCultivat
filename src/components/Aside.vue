@@ -88,12 +88,12 @@ export default {
           ico: "el-icon-present",
           children: [
             {
-              authName: "礼品管理",
-              path: "gift",
+              authName: "礼品信息管理",
+              path: "giftManage",
             },
             {
-              authName: "订单管理",
-              path: "order",
+              authName: "订单信息管理",
+              path: "giftOrders",
             },
           ],
         },

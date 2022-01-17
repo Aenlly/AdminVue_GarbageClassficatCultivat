@@ -7,6 +7,8 @@ import IndexVideo from '../views/index/IndexVideo.vue'
 import IndexCarousel from '../views/index/IndexCarousel.vue'
 import IndexGarbageType from '../views/index/IndexGarbageType.vue'
 import IndexGarbageList from '../views/index/IndexGarbageList.vue'
+
+import GiftOrders from '../views/gift/GiftOrders.vue'
 import { ElMessage } from "element-plus";
 
 const routes = [
@@ -65,7 +67,7 @@ const routes = [
         }
       }, {
         path: '/indexGarbageType',
-        name: 'indexGarbageType',
+        name: 'IndexGarbageType',
         component: IndexGarbageType,
         meta: {
           title: '垃圾类型管理'
@@ -73,10 +75,26 @@ const routes = [
       },
       {
         path: '/indexGarbageList',
-        name: 'indexGarbageList',
+        name: 'IndexGarbageList',
         component: IndexGarbageList,
         meta: {
           title: '垃圾类型数据列表'
+        },
+      },
+      {
+        path: '/giftManage',
+        name: 'GiftManage',
+        component: IndexGarbageList,
+        meta: {
+          title: '礼品信息管理'
+        },
+      },
+      {
+        path: '/giftOrders',
+        name: 'GiftOrders',
+        component: GiftOrders,
+        meta: {
+          title: '订单信息管理'
         },
       }
 

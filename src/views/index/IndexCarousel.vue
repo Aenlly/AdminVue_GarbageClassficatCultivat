@@ -344,11 +344,12 @@ export default {
   },
   // 在创建实例之后调用的钩子，所以用来初始化数据
   created() {
-    this.getTableList(this.data.current, this.data.size);
+    this.queryBy();
   },
   methods: {
     // 根据条件查询数据
     queryBy() {
+      this.data.current = 1;
       this.getTableList(this.data.current, this.data.size);
     },
     // 查询数据
