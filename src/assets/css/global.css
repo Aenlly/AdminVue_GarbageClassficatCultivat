@@ -45,3 +45,7 @@ body,
 .el-form-item__content {
   line-height: normal;
 }
+/* 选项卡样式 */
+.el-tabs {
+  height: 100%;
+}
