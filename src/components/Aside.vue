@@ -166,7 +166,7 @@ export default {
               path: "searchText",
             },
             {
-              authName: "记录管理",
+              authName: "用户搜索记录",
               path: "searchRecord",
             },
           ],

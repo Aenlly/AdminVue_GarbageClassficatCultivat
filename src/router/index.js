@@ -9,6 +9,8 @@ import IndexGarbageType from '../views/index/IndexGarbageType.vue'
 import IndexGarbageList from '../views/index/IndexGarbageList.vue'
 import GiftManage from '../views/gift/GiftManage.vue'
 import GiftOrders from '../views/gift/GiftOrders.vue'
+
+import SearchRecord from '../views/search/SearchRecord.vue'
 import { ElMessage } from "element-plus";
 
 const routes = [
@@ -95,6 +97,15 @@ const routes = [
         component: GiftOrders,
         meta: {
           title: '订单信息管理'
+        },
+      },
+
+      {
+        path: '/searchRecord',
+        name: 'SearchRecord',
+        component: SearchRecord,
+        meta: {
+          title: '用户搜索记录'
         },
       }
 

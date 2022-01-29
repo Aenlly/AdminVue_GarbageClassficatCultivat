@@ -9,6 +9,9 @@ import './assets/icon/iconfont.css'
 //element断点隐藏样式
 import installElementPlusIcos from './components/ico.js'
 import axios from 'axios'
+import Highcahrts from 'highcharts'
+import HighchartsVue from 'highcharts-vue'
+
 
 
 axios.defaults.baseURL = 'http://localhost:8003/api/'
@@ -27,6 +30,16 @@ app.config.globalProperties.axios = axios
 
 app.config.globalProperties.$httpResource = "http://localhost:8004"
 
+// 进行全局配置
+Highcahrts.setOptions({
+    credits: {
+        href: "https://www.aenlly.top/", //版权连接的地址
+        text: "垃圾分类养成", //版权显示的标题
+    }
+})
 installElementPlus(app)
 installElementPlusIcos(app)
+app.use(HighchartsVue, {
+    highcharts: Highcahrts
+})
 app.use(router).mount('#app')
