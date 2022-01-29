@@ -162,8 +162,8 @@ export default {
           ico: "el-icon-search",
           children: [
             {
-              authName: "文本搜索库",
-              path: "searchText",
+              authName: "搜索信息库",
+              path: "searchLibrary",
             },
             {
               authName: "用户搜索记录",

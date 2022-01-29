@@ -9,7 +9,7 @@ import IndexGarbageType from '../views/index/IndexGarbageType.vue'
 import IndexGarbageList from '../views/index/IndexGarbageList.vue'
 import GiftManage from '../views/gift/GiftManage.vue'
 import GiftOrders from '../views/gift/GiftOrders.vue'
-
+import SearchLibrary from '../views/search/SearchLibrary.vue'
 import SearchRecord from '../views/search/SearchRecord.vue'
 import { ElMessage } from "element-plus";
 
@@ -99,7 +99,14 @@ const routes = [
           title: '订单信息管理'
         },
       },
-
+      {
+        path: '/searchLibrary',
+        name: 'SearchLibrary',
+        component: SearchLibrary,
+        meta: {
+          title: '搜索信息库'
+        },
+      },
       {
         path: '/searchRecord',
         name: 'SearchRecord',
@@ -107,8 +114,7 @@ const routes = [
         meta: {
           title: '用户搜索记录'
         },
-      }
-
+      },
     ],
   }
 
