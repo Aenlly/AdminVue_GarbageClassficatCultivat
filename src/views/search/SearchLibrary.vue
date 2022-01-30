@@ -36,7 +36,7 @@
               :data="data.records"
               style="width: 100%"
               @selection-change="handleSelectionChange"
-              max-height="650"
+              max-height="620"
               border
               stripe
             >

@@ -9,6 +9,8 @@ import IndexGarbageType from '../views/index/IndexGarbageType.vue'
 import IndexGarbageList from '../views/index/IndexGarbageList.vue'
 import GiftManage from '../views/gift/GiftManage.vue'
 import GiftOrders from '../views/gift/GiftOrders.vue'
+import IntegralRecord from '../views/integral/IntegralRecord.vue'
+import IntegralTitle from '../views/integral/IntegralTitle.vue'
 import SearchLibrary from '../views/search/SearchLibrary.vue'
 import SearchRecord from '../views/search/SearchRecord.vue'
 import { ElMessage } from "element-plus";
@@ -97,6 +99,22 @@ const routes = [
         component: GiftOrders,
         meta: {
           title: '订单信息管理'
+        },
+      },
+      {
+        path: '/integralRecord',
+        name: 'IntegralRecord',
+        component: IntegralRecord,
+        meta: {
+          title: '积分记录查看'
+        },
+      },
+      {
+        path: '/integralTitle',
+        name: 'IntegralTitle',
+        component: IntegralTitle,
+        meta: {
+          title: '积分头衔管理'
         },
       },
       {

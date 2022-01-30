@@ -114,7 +114,7 @@
             type="index"
             width="50"
           ></el-table-column>
-          <el-table-column label="订单描述" prop="logDesc"></el-table-column>
+          <el-table-column label="记录描述" prop="logDesc"></el-table-column>
           <el-table-column label="积分变动" prop="number"></el-table-column>
           <el-table-column label="变动状态" width="80">
             <template #default="{ row }">
