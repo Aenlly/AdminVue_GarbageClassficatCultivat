@@ -102,7 +102,7 @@
               v-model="create.name"
               placeholder="请输入垃圾名称"
               show-word-limit
-              maxlength="5"
+              maxlength="20"
             ></el-input>
           </el-form-item>
           <el-form-item label="所属类型" prop="type">
@@ -146,7 +146,7 @@
               v-model="edit.name"
               placeholder="请输入垃圾名称"
               show-word-limit
-              maxlength="5"
+              maxlength="20"
             ></el-input>
           </el-form-item>
           <el-form-item label="所属类型" prop="type">
