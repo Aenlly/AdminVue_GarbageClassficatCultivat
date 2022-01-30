@@ -125,11 +125,11 @@ export default {
           children: [
             {
               authName: "信息管理",
-              path: "waste",
+              path: "wasteTurnTreasure",
             },
             {
               authName: "审核管理",
-              path: "wasteAudit",
+              path: "wasteTurnTreasureAudit",
             },
           ],
         },
