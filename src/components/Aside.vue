@@ -148,11 +148,11 @@ export default {
           ico: "el-icon-coin",
           children: [
             {
-              authName: "记录管理",
+              authName: "积分记录查看",
               path: "integralRecord",
             },
             {
-              authName: "头衔管理",
+              authName: "积分头衔管理",
               path: "integralTitle",
             },
           ],
