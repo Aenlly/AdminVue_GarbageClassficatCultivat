@@ -15,8 +15,8 @@
                   placeholder="请选择"
                   style="width: 110px"
                 >
-                  <el-option label="视频标题" value="0"></el-option>
-                  <el-option label="视频简介" value="1"></el-option>
+                  <el-option label="标题" value="0"></el-option>
+                  <el-option label="描述" value="1"></el-option>
                 </el-select>
               </template>
               <template #append>
@@ -25,6 +25,18 @@
                 </el-button>
               </template>
             </el-input>
+          </el-col>
+          <el-col :span="3">
+            <el-select v-model="textTag" style="width: 150px">
+              <template #prefix> 标签：</template>
+              <el-option label="全部" value=""></el-option>
+              <el-option
+                v-for="item in textTagList"
+                :key="item.name"
+                :label="item"
+                :value="item"
+              ></el-option>
+            </el-select>
           </el-col>
           <!-- 搜索区结束 -->
           <el-col :span="2">
@@ -44,19 +56,15 @@
               :data="data.records"
               style="width: 100%"
               @selection-change="handleSelectionChange"
-              max-height="620"
+              max-height="550"
               border
               stripe
             >
               <el-table-column type="selection" width="55" />
               <el-table-column fixed type="index" label="序号" width="60" />
+              <el-table-column prop="text" label="标题" show-overflow-tooltip />
               <el-table-column
-                prop="videoTitle"
-                label="标题"
-                show-overflow-tooltip
-              />
-              <el-table-column
-                prop="videoDesc"
+                prop="textDesc"
                 label="描述"
                 show-overflow-tooltip
               />
@@ -64,27 +72,30 @@
                 <template #default="{ row }">
                   <el-tooltip content="单击预览" placement="bottom">
                     <el-image
-                      :src="httpResource + row.videoImg"
+                      :src="httpResource + row.imgUrl"
                       style="height: 80px"
-                      :preview-src-list="[httpResource + row.videoImg]"
+                      :preview-src-list="[httpResource + row.imgUrl]"
                       fit="contain"
                     ></el-image>
                   </el-tooltip>
                 </template>
               </el-table-column>
+              <el-table-column prop="likeCount" label="点赞量" />
+              <el-table-column prop="collectCount" label="收藏量" />
               <el-table-column prop="shareCount" label="分享量" />
-              <el-table-column prop="videoCheck" label="状态" width="80" />
-              <el-table-column prop="createTime" label="创建时间" width="160" />
-              <el-table-column label="操作" fixed="right" width="350">
+              <el-table-column label="标签" width="70">
                 <template #default="{ row }">
-                  <el-tooltip content="置顶内容" placement="bottom">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-top"
-                      size="small"
-                      @click="top(row)"
-                    ></el-button>
-                  </el-tooltip>
+                  <el-tag>{{ row.textTag }}</el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column label="状态" width="80">
+                <template #default="{ row }">
+                  <el-tag type="success">{{ row.audit }}</el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column prop="createTime" label="创建时间" width="160" />
+              <el-table-column label="操作" fixed="right" width="290">
+                <template #default="{ row }">
                   <el-tooltip content="发布内容" placement="bottom">
                     <el-button
                       type="primary"
@@ -124,7 +135,7 @@
                       type="danger"
                       icon="el-icon-delete"
                       size="small"
-                      @click="deleteById(row.videoId)"
+                      @click="deleteById(row.id)"
                     ></el-button>
                   </el-tooltip>
                 </template>
@@ -161,23 +172,22 @@
     </el-row>
   </el-dialog>
   <!-- 视频播放弹窗结束 -->
-
   <!-- 新增数据弹窗开始 -->
   <el-dialog v-model="dialogCreateVisible" title="新增数据" top="5vh">
     <el-row>
       <el-col :span="12" :offset="6">
         <el-form :model="create" ref="createForm" :rules="formRules">
-          <el-form-item label="标题" prop="videoTitle">
+          <el-form-item label="标题" prop="text">
             <el-input
-              v-model="create.videoTitle"
+              v-model="create.text"
               placeholder="请输入标题"
               show-word-limit
               maxlength="50"
             ></el-input>
           </el-form-item>
-          <el-form-item label="描述" prop="videoDesc">
+          <el-form-item label="描述" prop="textDesc">
             <el-input
-              v-model="create.videoDesc"
+              v-model="create.textDesc"
               maxlength="200"
               :autosize="{ minRows: 2, maxRows: 4 }"
               type="textarea"
@@ -185,10 +195,23 @@
               placeholder="请输入描述"
             ></el-input>
           </el-form-item>
-          <el-form-item label="封面" prop="videoImg">
+          <el-form-item label="标签" prop="textTag">
+            <el-radio
+              style="margin-top: 5px"
+              v-model="create.textTag"
+              v-for="item in textTagList"
+              :key="item"
+              :label="item"
+              size="large"
+              border
+            >
+              {{ item }}
+            </el-radio>
+          </el-form-item>
+          <el-form-item label="封面" prop="imgUrl">
             <!-- action上传的地址,list-type改变样式,multiple是否支持多选文件,accept限制上传格式,limit允许上传的最大数量,name上传的文件字段名 -->
             <el-upload
-              v-model="create.videoImg"
+              v-model="create.imgUrl"
               :action="uploadImageUrl"
               list-type="picture-card"
               :multiple="false"
@@ -250,16 +273,6 @@
               </template>
             </el-upload>
           </el-form-item>
-          <el-form-item label="状态" prop="videoCheck">
-            <el-select v-model="create.videoCheck" placeholder="请选择状态">
-              <el-option
-                v-for="item in videoChecks"
-                :key="item.name"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
         </el-form>
       </el-col>
     </el-row>
@@ -279,17 +292,17 @@
     <el-row>
       <el-col :span="12" :offset="6">
         <el-form :model="edit" :rules="formRules" ref="editForm">
-          <el-form-item label="标题" prop="videoTitle">
+          <el-form-item label="标题" prop="text">
             <el-input
-              v-model="edit.videoTitle"
+              v-model="edit.text"
               placeholder="请输入标题"
               show-word-limit
               maxlength="50"
             ></el-input>
           </el-form-item>
-          <el-form-item label="描述" prop="videoDesc">
+          <el-form-item label="描述" prop="textDesc">
             <el-input
-              v-model="edit.videoDesc"
+              v-model="edit.textDesc"
               maxlength="200"
               :autosize="{ minRows: 2, maxRows: 4 }"
               type="textarea"
@@ -297,10 +310,23 @@
               placeholder="请输入描述"
             ></el-input>
           </el-form-item>
-          <el-form-item label="封面" prop="videoImg">
+          <el-form-item label="标签" prop="textTag">
+            <el-radio
+              style="margin-top: 5px"
+              v-model="edit.textTag"
+              v-for="item in textTagList"
+              :key="item"
+              :label="item"
+              size="large"
+              border
+            >
+              {{ item }}
+            </el-radio>
+          </el-form-item>
+          <el-form-item label="封面" prop="imgUrl">
             <!-- action上传的地址,list-type改变样式,multiple是否支持多选文件,limit允许上传的最大数量 -->
             <el-upload
-              v-model="edit.videoImg"
+              v-model="edit.imgUrl"
               :action="uploadImageUrl"
               list-type="picture-card"
               :multiple="false"
@@ -364,16 +390,6 @@
               </template>
             </el-upload>
           </el-form-item>
-          <el-form-item label="状态" prop="videoCheck">
-            <el-select v-model="edit.videoCheck" placeholder="请选择状态">
-              <el-option
-                v-for="item in videoChecks"
-                :key="item.name"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
         </el-form>
       </el-col>
     </el-row>
@@ -393,10 +409,9 @@
 import Breadcrumb from "../../components/Breadcrumb.vue";
 import Pagination from "../../components/Pagination.vue";
 import qs from "qs";
-
 // 校验规则
 const formRules = {
-  videoTitle: [
+  text: [
     {
       required: true, //必填
       message: "请输入标题", //提示
@@ -409,7 +424,7 @@ const formRules = {
       trigger: "blur",
     },
   ],
-  videoDesc: [
+  textDesc: [
     {
       required: true, //必填
       message: "请输入描述", //提示
@@ -422,6 +437,13 @@ const formRules = {
       trigger: "blur",
     },
   ],
+  textTag: [
+    {
+      required: true, //必填
+      message: "请选择标签", //提示
+      trigger: "blur", //鼠标离开时触发
+    },
+  ],
   videoUrl: [
     {
       required: true, //必填
@@ -429,7 +451,7 @@ const formRules = {
       trigger: "blur", //鼠标离开时触发
     },
   ],
-  videoImg: [
+  imgUrl: [
     {
       required: true, //必填
       message: "请上传封面", //提示
@@ -437,42 +459,27 @@ const formRules = {
     },
   ],
 };
-
 export default {
   components: { Breadcrumb, Pagination },
   data() {
     return {
-      breadcrumb: [{ name: "首页信息管理" }, { name: "视频信息管理" }],
+      breadcrumb: [{ name: "变废为宝管理" }, { name: "信息管理(管理员)" }],
       httpResource: this.$httpResource,
-      uploadVideoUrl: this.axios.defaults.baseURL + "video/uploadVideo", //上传视频文件地址
-      uploadImageUrl: this.axios.defaults.baseURL + "video/uploadImage", //上传图片文件地址
-      getListUrl: "/video/getList", //获取数据的后台接口
-      delByIdsUrl: "/video/delByIds", //批量删除的后台接口
-      delByIdUrl: "/video/delById", //单一删除数据的后台接口
-      createUrl: "video/create", //新增数据的后台接口
-      updateUrl: "video/update", //修改数据的后台接口
+      uploadVideoUrl:
+        this.axios.defaults.baseURL + "waste-turn-treasure/uploadVideo", //上传视频文件地址
+      uploadImageUrl:
+        this.axios.defaults.baseURL + "waste-turn-treasure/uploadImage", //上传图片文件地址
+      getListUrl: "waste-turn-treasure/getList", //获取数据的后台接口
+      delByIdsUrl: "waste-turn-treasure/delByIds", //批量删除的后台接口
+      delByIdUrl: "waste-turn-treasure/delById", //单一删除数据的后台接口
+      createUrl: "waste-turn-treasure/create", //新增数据的后台接口
+      updateUrl: "waste-turn-treasure/update", //修改数据的后台接口
       editVideoList: [],
       editImageList: [],
-      videoChecks: [
-        {
-          name: "待发布",
-          value: 0,
-        },
-        {
-          name: "已发布",
-          value: 1,
-        },
-        {
-          name: "已下线",
-          value: -1,
-        },
-        {
-          name: "置顶",
-          value: 2,
-        },
-      ],
       queryType: "0", //查询类型
       text: "", //查询内容
+      textTag: "", //标签条件
+      isUserUpload: "否", //是否管理员上传的信息
       checkVideoUrl: "", //查看的视频url地址
       dialogCheckVisible: false, //查看视频的对话框
       dialogCreateVisible: false, //创建数据的对话框
@@ -480,12 +487,15 @@ export default {
       selectIds: [],
       edit: {},
       create: {
-        videoTitle: "",
-        videoDesc: "",
-        videoImg: "",
+        text: "",
+        textDesc: "",
+        imgUrl: "",
+        textTag: "",
         videoUrl: "",
-        videoCheck: "待发布",
+        promulgatorId: window.sessionStorage.getItem("id"),
+        audit: "已发布",
       },
+      textTagList: ["好用", "好看", "好玩"],
       formRules: formRules, //创建弹窗的验证规则
       data: {
         current: 1, //当前页
@@ -497,6 +507,13 @@ export default {
   // 在创建实例之后调用的钩子，所以用来初始化数据
   created() {
     this.queryBy();
+  },
+  // 监听变化的值
+  watch: {
+    //   监听标签状态选项框，使其变动时，重新赋值
+    textTag(val, oldVal) {
+      this.queryBy();
+    },
   },
   methods: {
     // 根据条件查询数据
@@ -512,6 +529,8 @@ export default {
           size: size,
           queryType: this.queryType,
           text: this.text,
+          textTag: this.textTag,
+          isUserUpload: this.isUserUpload,
         },
       });
       // 返回码进行判断
@@ -540,7 +559,7 @@ export default {
     // 选择时触发事件
     handleSelectionChange(val) {
       // 统计所选id
-      this.selectIds = val.map((item) => item.videoId);
+      this.selectIds = val.map((item) => item.id);
     },
 
     // 删除所选触发批量删除事件
@@ -571,33 +590,28 @@ export default {
       }
     },
 
-    // 置顶按钮触发事件
-    top(row) {
-      if (row.videoCheck === "置顶") {
-        this.$message.warning("该数据已是置顶状态!");
-      } else {
-        this.updateCheck("/top", row.videoId, "置顶成功");
-      }
-    },
     // 发布按钮触发事件
     publish(row) {
-      if (row.videoCheck === "已发布") {
+      if (row.audit === "已发布") {
         this.$message.warning("该数据已是发布状态!");
       } else {
-        this.updateCheck("/publish", row.videoId, "发布成功");
+        this.updateRevise("/publish", row.id, "发布成功");
       }
     },
     // 下线按钮触发事件
     shelf(row) {
-      if (row.videoCheck === "已下线") {
-        this.$message.warning("该数据已是下线状态!");
+      if (row.audit === "已下架") {
+        this.$message.warning("该数据已是下架状态!");
       } else {
-        this.updateCheck("/shelf", row.videoId, "下线成功");
+        this.updateRevise("/shelf", row.id, "下线成功");
       }
     },
+
     // 更改状态方法
-    async updateCheck(url, id, msg) {
-      const { data: res } = await this.axios.put("/video" + url + "/" + id);
+    async updateRevise(url, id, msg) {
+      const { data: res } = await this.axios.put(
+        "/waste-turn-treasure" + url + "/" + id
+      );
       if ((res.code = 200)) {
         this.$message.success(msg);
         this.queryBy();
@@ -605,6 +619,7 @@ export default {
         this.$message.error("设置失败!");
       }
     },
+
     // 编辑按钮触发事件
     editById(row) {
       // 深拷贝，使其不改变表格中的内容
@@ -612,12 +627,14 @@ export default {
       // 在字段中删除创建时间与分享量
       delete this.edit.createTime;
       delete this.edit.shareCount;
-      const videoImg = row.videoImg.split("/");
+      delete this.edit.collectCount;
+      delete this.edit.likeCount;
+      const imgUrl = row.imgUrl.split("/");
       const videoUrl = row.videoUrl.split("/");
       // 显示的图片
       this.editImageList[0] = {
-        name: videoImg[videoImg.length - 1],
-        url: this.httpResource + row.videoImg,
+        name: imgUrl[imgUrl.length - 1],
+        url: this.httpResource + row.imgUrl,
       };
       // 显示的视频文件
       this.editVideoList[0] = {
@@ -650,13 +667,12 @@ export default {
         })
         .catch(() => {});
     },
-
     /**新增数据所需方法开始 */
     // 新建数据弹窗上传图片成功触发事件
     createSuccessImage(response, file, fileList) {
       if (response.code == 200) {
         file.url = this.httpResource + response.data;
-        this.create.videoImg = response.data;
+        this.create.imgUrl = response.data;
         this.$message.success("上传图片成功");
       } else {
         this.$message.error("上传图片失败");
@@ -675,7 +691,7 @@ export default {
           type: "warning",
         })
         .then(() => {
-          this.create.videoImg = null;
+          this.create.imgUrl = null;
           // 先清除原来的文件
           this.$refs.createUploadImage.handleRemove(fileList[0]);
           // 再添加选择的文件
@@ -789,7 +805,7 @@ export default {
     editSuccessImage(response, file, fileList) {
       if (response.code == 200) {
         file.url = this.httpResource + response.data;
-        this.edit.videoImg = response.data;
+        this.edit.imgUrl = response.data;
         this.$message.success("上传图片成功");
       } else {
         this.$message.error("上传图片失败");
@@ -808,7 +824,7 @@ export default {
           type: "warning",
         })
         .then(() => {
-          this.edit.videoImg = null;
+          this.edit.imgUrl = null;
           // 先清除原来的文件
           this.$refs.editUploadImage.handleRemove(fileList[0]);
           this.$message.success("操作成功");
@@ -895,5 +911,5 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style>
 </style>

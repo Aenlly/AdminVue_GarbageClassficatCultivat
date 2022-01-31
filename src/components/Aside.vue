@@ -51,7 +51,7 @@ export default {
   data() {
     return {
       isCollapse: false,
-      activeState: "0",
+      activeState: "index",
       menuList: [
         {
           authName: "数据信息统计",
@@ -181,12 +181,11 @@ export default {
   methods: {
     // 缩放菜单栏事件
     toggle() {
-      this.$data.isCollapse = !this.$data.isCollapse;
+      this.isCollapse = !this.isCollapse;
     },
     saveActiveState(activeState) {
-      console.log(activeState);
       window.sessionStorage.setItem("activeState", activeState.index);
-      this.$data.activeState = activeState;
+      this.activeState = activeState;
     },
   },
 };

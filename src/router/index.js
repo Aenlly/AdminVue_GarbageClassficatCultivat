@@ -167,19 +167,19 @@ router.beforeEach((to, from, next) => {
   //获取token，用于判断是否登录
   const tokenStr = window.sessionStorage.getItem('token')
 
-  // if (to.path === '/login') {
-  //   //存在token则跳转至首页
-  //   if (tokenStr) {
-  //     return next("/index")
-  //   }
-  //   return next()
-  // }
-  // if (!tokenStr) {
-  //   // 提示
-  //   ElMessage.warning("请先登录!")
-  //   //强制跳转至登录页
-  //   next('/login')
-  // }
+  if (to.path === '/login') {
+    //存在token则跳转至首页
+    if (tokenStr) {
+      return next("/index")
+    }
+    return next()
+  }
+  if (!tokenStr) {
+    // 提示
+    ElMessage.warning("请先登录!")
+    //强制跳转至登录页
+    next('/login')
+  }
   //放行
   next()
 })

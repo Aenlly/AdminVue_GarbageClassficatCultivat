@@ -109,6 +109,8 @@ export default {
           this.$message.success("登录成功");
           //存储token
           window.sessionStorage.setItem("token", res.data.token);
+          console.log(res.data);
+          window.sessionStorage.setItem("id", res.data.id);
           window.sessionStorage.setItem("name", res.data.name);
           window.sessionStorage.setItem("imgUrl", res.data.imgUrl);
 
