@@ -71,39 +71,18 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column prop="likeCount" label="点赞量" />
-              <el-table-column prop="collectCount" label="收藏量" />
-              <el-table-column prop="shareCount" label="分享量" />
               <el-table-column label="标签" width="70">
                 <template #default="{ row }">
                   <el-tag>{{ row.textTag }}</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column label="状态" width="80">
+              <el-table-column
+                prop="updateTime"
+                label="上一次操作时间"
+                width="160"
+              />
+              <el-table-column label="操作" fixed="right" width="70">
                 <template #default="{ row }">
-                  <el-tag type="success">{{ row.audit }}</el-tag>
-                </template>
-              </el-table-column>
-              <el-table-column prop="createTime" label="创建时间" width="160" />
-              <el-table-column label="操作" fixed="right" width="180">
-                <template #default="{ row }">
-                  <el-tooltip content="发布内容" placement="bottom">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-circle-plus-outline"
-                      size="small"
-                      @click="publish(row)"
-                    ></el-button>
-                  </el-tooltip>
-
-                  <el-tooltip content="下架内容" placement="bottom">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-remove-outline"
-                      size="small"
-                      @click="shelf(row)"
-                    ></el-button>
-                  </el-tooltip>
                   <el-tooltip content="查看视频" placement="bottom">
                     <el-button
                       type="primary"
@@ -158,11 +137,11 @@ export default {
     return {
       breadcrumb: [
         { name: "变废为宝管理" },
-        { name: "信息管理" },
-        { name: "信息管理(用户)" },
+        { name: "审核管理" },
+        { name: "未通过库" },
       ],
       httpResource: this.$httpResource,
-      getListUrl: "waste-turn-treasure/getList", //获取数据的后台接口
+      getListUrl: "waste-turn-treasure/getNotThroughList", //获取数据的后台接口
       queryType: "0", //查询类型
       text: "", //查询内容
       textTag: "", //标签条件
@@ -227,35 +206,6 @@ export default {
     // 查看视频弹窗关闭事件
     dialogCheckClose() {
       this.checkVideoUrl = null;
-    },
-    // 发布按钮触发事件
-    publish(row) {
-      if (row.audit === "已发布") {
-        this.$message.warning("该数据已是发布状态!");
-      } else {
-        this.updateRevise("/publish", row.id, "发布成功");
-      }
-    },
-    // 下线按钮触发事件
-    shelf(row) {
-      if (row.audit === "已下架") {
-        this.$message.warning("该数据已是下架状态!");
-      } else {
-        this.updateRevise("/shelf", row.id, "下线成功");
-      }
-    },
-
-    // 更改状态方法
-    async updateRevise(url, id, msg) {
-      const { data: res } = await this.axios.put(
-        "/waste-turn-treasure" + url + "/" + id
-      );
-      if ((res.code = 200)) {
-        this.$message.success(msg);
-        this.queryBy();
-      } else {
-        this.$message.error("设置失败!");
-      }
     },
   },
 };

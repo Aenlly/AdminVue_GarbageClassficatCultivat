@@ -71,45 +71,24 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
-              <el-table-column prop="likeCount" label="点赞量" />
-              <el-table-column prop="collectCount" label="收藏量" />
-              <el-table-column prop="shareCount" label="分享量" />
               <el-table-column label="标签" width="70">
                 <template #default="{ row }">
                   <el-tag>{{ row.textTag }}</el-tag>
                 </template>
               </el-table-column>
-              <el-table-column label="状态" width="80">
+              <el-table-column
+                prop="updateTime"
+                label="上一次操作时间"
+                width="160"
+              />
+              <el-table-column label="操作" fixed="right" width="70">
                 <template #default="{ row }">
-                  <el-tag type="success">{{ row.audit }}</el-tag>
-                </template>
-              </el-table-column>
-              <el-table-column prop="createTime" label="创建时间" width="160" />
-              <el-table-column label="操作" fixed="right" width="180">
-                <template #default="{ row }">
-                  <el-tooltip content="发布内容" placement="bottom">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-circle-plus-outline"
-                      size="small"
-                      @click="publish(row)"
-                    ></el-button>
-                  </el-tooltip>
-
-                  <el-tooltip content="下架内容" placement="bottom">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-remove-outline"
-                      size="small"
-                      @click="shelf(row)"
-                    ></el-button>
-                  </el-tooltip>
-                  <el-tooltip content="查看视频" placement="bottom">
+                  <el-tooltip content="查看视频进行审核" placement="bottom">
                     <el-button
                       type="primary"
                       icon="el-icon-view"
                       size="small"
-                      @click="checkVideo(row.videoUrl)"
+                      @click="checkVideo(row)"
                     ></el-button>
                   </el-tooltip>
                 </template>
@@ -137,11 +116,24 @@
     width="30%"
     @close="dialogCheckClose"
   >
-    <el-row style="width: 100%">
-      <el-col :span="24" style="width: 100%">
+    <el-row>
+      <el-col :span="24">
         <video style="width: 100%" height="300" :src="checkVideoUrl" controls>
           您的浏览器不支持视频播放
         </video>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="24">
+        <div style="height: 20px"></div>
+      </el-col>
+    </el-row>
+    <el-row style="width: 100%">
+      <el-col :span="12" style="width: 100%">
+        <el-button type="primary" @click="through">审核通过</el-button>
+      </el-col>
+      <el-col :span="12" style="width: 100%">
+        <el-button type="error" @click="notThrough">拒绝通过</el-button>
       </el-col>
     </el-row>
   </el-dialog>
@@ -158,11 +150,11 @@ export default {
     return {
       breadcrumb: [
         { name: "变废为宝管理" },
-        { name: "信息管理" },
-        { name: "信息管理(用户)" },
+        { name: "审核管理" },
+        { name: "待审核库" },
       ],
       httpResource: this.$httpResource,
-      getListUrl: "waste-turn-treasure/getList", //获取数据的后台接口
+      getListUrl: "waste-turn-treasure/getAuditList", //获取数据的后台接口
       queryType: "0", //查询类型
       text: "", //查询内容
       textTag: "", //标签条件
@@ -220,39 +212,52 @@ export default {
       }
     },
     // 查看视频弹窗事件
-    checkVideo(videoUrl) {
+    checkVideo(row) {
       this.dialogCheckVisible = true;
-      this.checkVideoUrl = this.httpResource + videoUrl;
+      this.checkVideoUrl = this.httpResource + row.videoUrl;
+      this.auditId = row.id;
     },
     // 查看视频弹窗关闭事件
     dialogCheckClose() {
       this.checkVideoUrl = null;
     },
-    // 发布按钮触发事件
-    publish(row) {
-      if (row.audit === "已发布") {
-        this.$message.warning("该数据已是发布状态!");
-      } else {
-        this.updateRevise("/publish", row.id, "发布成功");
-      }
+    // 通过按钮触发事件
+    through() {
+      this.$messageBox
+        .confirm("确认通过该信息审核?", "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+        .then(() => {
+          this.updateRevise("/publish", this.auditId);
+        })
+        .catch(() => {});
     },
-    // 下线按钮触发事件
-    shelf(row) {
-      if (row.audit === "已下架") {
-        this.$message.warning("该数据已是下架状态!");
-      } else {
-        this.updateRevise("/shelf", row.id, "下线成功");
-      }
+    // 拒绝通过按钮触发事件
+    notThrough() {
+      this.$messageBox
+        .confirm("确认拒绝通过该信息审核?", "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        })
+        .then(() => {
+          this.updateRevise("/notThrough", this.auditId);
+        })
+        .catch(() => {});
     },
 
     // 更改状态方法
-    async updateRevise(url, id, msg) {
+    async updateRevise(url, id) {
       const { data: res } = await this.axios.put(
         "/waste-turn-treasure" + url + "/" + id
       );
       if ((res.code = 200)) {
-        this.$message.success(msg);
+        this.$message.success("操作成功");
         this.queryBy();
+        this.dialogCheckVisible = false;
+        this.dialogCheckClose();
       } else {
         this.$message.error("设置失败!");
       }

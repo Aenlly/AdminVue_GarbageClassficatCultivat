@@ -463,7 +463,11 @@ export default {
   components: { Breadcrumb, Pagination },
   data() {
     return {
-      breadcrumb: [{ name: "变废为宝管理" }, { name: "信息管理(管理员)" }],
+      breadcrumb: [
+        { name: "变废为宝管理" },
+        { name: "信息管理" },
+        { name: "信息管理(管理员)" },
+      ],
       httpResource: this.$httpResource,
       uploadVideoUrl:
         this.axios.defaults.baseURL + "waste-turn-treasure/uploadVideo", //上传视频文件地址
