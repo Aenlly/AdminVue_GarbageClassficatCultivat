@@ -9,6 +9,7 @@ import IndexGarbageType from '../views/index/IndexGarbageType.vue'
 import IndexGarbageList from '../views/index/IndexGarbageList.vue'
 import GiftManage from '../views/gift/GiftManage.vue'
 import GiftOrders from '../views/gift/GiftOrders.vue'
+import HotInfo from '../views/hotInformation/HotInfo.vue'
 import WasteTurnTreasure from '../views/wasteTurnTreasure/WasteTurnTreasure.vue'
 import WasteTurnTreasureAudit from '../views/wasteTurnTreasure/WasteTurnTreasureAudit.vue'
 import IntegralRecord from '../views/integral/IntegralRecord.vue'
@@ -101,6 +102,14 @@ const routes = [
         component: GiftOrders,
         meta: {
           title: '订单信息管理'
+        },
+      },
+      {
+        path: '/hotInfo',
+        name: 'HotInfo',
+        component: HotInfo,
+        meta: {
+          title: '资讯信息管理'
         },
       },
       {

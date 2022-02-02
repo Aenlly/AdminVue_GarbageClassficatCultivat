@@ -32,7 +32,7 @@
               <el-option label="全部" value=""></el-option>
               <el-option
                 v-for="item in textTagList"
-                :key="item.name"
+                :key="item"
                 :label="item"
                 :value="item"
               ></el-option>
@@ -98,16 +98,15 @@
                 <template #default="{ row }">
                   <el-tooltip content="发布内容" placement="bottom">
                     <el-button
-                      type="primary"
+                      type="success"
                       icon="el-icon-circle-plus-outline"
                       size="small"
                       @click="publish(row)"
                     ></el-button>
                   </el-tooltip>
-
                   <el-tooltip content="下架内容" placement="bottom">
                     <el-button
-                      type="primary"
+                      type="warning"
                       icon="el-icon-remove-outline"
                       size="small"
                       @click="shelf(row)"
@@ -115,7 +114,6 @@
                   </el-tooltip>
                   <el-tooltip content="查看视频" placement="bottom">
                     <el-button
-                      type="primary"
                       icon="el-icon-view"
                       size="small"
                       @click="checkVideo(row.videoUrl)"
@@ -607,7 +605,7 @@ export default {
       if (row.audit === "已下架") {
         this.$message.warning("该数据已是下架状态!");
       } else {
-        this.updateRevise("/shelf", row.id, "下线成功");
+        this.updateRevise("/shelf", row.id, "下架成功");
       }
     },
 

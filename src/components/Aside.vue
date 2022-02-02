@@ -134,12 +134,12 @@ export default {
           ],
         },
         {
-          authName: "资讯信息管理",
+          authName: "热门资讯管理",
           ico: "el-icon-reading",
           children: [
             {
-              authName: "信息管理",
-              path: "information",
+              authName: "资讯信息管理",
+              path: "hotInfo",
             },
           ],
         },

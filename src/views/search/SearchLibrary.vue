@@ -45,11 +45,12 @@
               <el-table-column
                 prop="name"
                 label="垃圾名称"
+                align="center"
                 show-overflow-tooltip
               />
-              <el-table-column prop="type" label="所属类型" />
+              <el-table-column prop="type" label="所属类型" align="center" />
               <el-table-column prop="createTime" label="创建时间" width="160" />
-              <el-table-column label="操作" fixed="right" width="350">
+              <el-table-column label="操作" fixed="right" width="120">
                 <template #default="{ row }">
                   <el-tooltip content="编辑数据" placement="bottom">
                     <el-button
