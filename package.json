@@ -14,7 +14,8 @@
     "highcharts": "^9.3.2",
     "highcharts-vue": "^1.4.0",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.0-0"
+    "vue-router": "^4.0.0-0",
+    "wangeditor": "^4.7.11"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

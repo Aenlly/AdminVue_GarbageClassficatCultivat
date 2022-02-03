@@ -1,6 +1,6 @@
-import { ElButton, ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOption, ElUpload, ElRadio } from 'element-plus'
+import { ElButton, ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOption, ElUpload, ElRadio, ElDatePicker } from 'element-plus'
 import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElFooter, ElAside, ElDivider, ElBreadcrumb, ElBreadcrumbItem, ElLink } from 'element-plus'
-import { ElMenu, ElSubmenu, ElMenuItem, ElMenuItemGroup, ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus'
+import { ElMenu, ElSubmenu, ElMenuItem, ElMenuItemGroup, ElDropdown, ElDropdownMenu, ElDropdownItem, ElPageHeader } from 'element-plus'
 import { ElIcon, ElImage, ElAvatar, ElConfigProvider } from 'element-plus'
 import { ElCard, ElTable, ElTableColumn, ElPagination, ElTabs, ElTabPane } from 'element-plus'
 import { ElMessage, ElMessageBox, ElTooltip, ElDialog, ElTag, ElPopover } from "element-plus";
@@ -26,6 +26,7 @@ export default (app) => {
   app.use(ElDropdown)
   app.use(ElDropdownMenu)
   app.use(ElDropdownItem)
+  app.use(ElPageHeader)
 
   app.use(ElButton)
   app.use(ElForm)
@@ -36,6 +37,7 @@ export default (app) => {
   app.use(ElOption)
   app.use(ElUpload)
   app.use(ElRadio)
+  app.use(ElDatePicker)
 
   app.use(ElIcon)
   app.use(ElImage)

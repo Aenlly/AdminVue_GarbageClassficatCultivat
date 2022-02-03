@@ -79,15 +79,7 @@
                       type="primary"
                       icon="el-icon-s-unfold"
                       size="small"
-                      @click="
-                        this.$router.push({
-                          path: '/indexGarbageList',
-                          query: {
-                            garbageTypeName: row.garbageType,
-                            belongId: row.garbageId,
-                          },
-                        })
-                      "
+                      @click="goBelongList(row.garbageType, row.garbageId)"
                     ></el-button>
                   </el-tooltip>
                   <el-tooltip content="编辑数据" placement="bottom">
@@ -557,6 +549,15 @@ export default {
           }
           this.$message.error("保存数据失败!");
         }
+      });
+    },
+    goBelongList(garbageType, garbageId) {
+      this.$router.push({
+        path: "/indexGarbageList",
+        query: {
+          garbageTypeName: garbageType,
+          belongId: garbageId,
+        },
       });
     },
   },

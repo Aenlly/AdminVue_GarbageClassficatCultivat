@@ -134,7 +134,7 @@
                           type="primary"
                           icon="el-icon-edit"
                           size="small"
-                          @click="editById(row)"
+                          @click="editById(row.hotInfoId)"
                         ></el-button>
                       </el-tooltip>
                     </el-col>
@@ -322,6 +322,15 @@ export default {
           }
         })
         .catch(() => {});
+    },
+    // 跳转编辑页面
+    editById(id) {
+      this.$router.push({
+        path: "/hotInfoEdit",
+        query: {
+          id: id,
+        },
+      });
     },
   },
 };

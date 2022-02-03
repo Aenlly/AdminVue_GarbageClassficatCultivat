@@ -1,9 +1,13 @@
 <template>
-  <Breadcrumb :infoTitles="breadcrumb" />
   <el-row>
     <el-col :span="24">
       <!-- 卡片开始 -->
       <el-card class="box-card">
+        <template #header>
+          <div class="card-header">
+            <el-page-header content="所属垃圾类型数据列表" @back="goBack" />
+          </div>
+        </template>
         <!-- 数据区域容器开始 -->
         <el-row class="data-header">
           <!-- 搜索区开始 -->
@@ -200,7 +204,7 @@
               :action="uploadImageUrl"
               list-type="picture-card"
               :multiple="false"
-              accept=".png,.ico"
+              accept=".png"
               name="imageFile"
               :limit="1"
               ref="editUploadImage"
@@ -282,12 +286,11 @@ const formRules = {
 };
 
 export default {
-  components: { Breadcrumb, Pagination },
+  components: { Pagination },
   data() {
     return {
       garbageTypeName: this.$route.query.garbageTypeName, //上一页面传值所属垃圾类型名称
       belongId: this.$route.query.belongId, //上一页面传值所属垃圾类型id
-      breadcrumb: [{ name: "首页信息管理" }, { name: "垃圾类型管理" }],
       httpResource: this.$httpResource,
       uploadImageUrl: this.axios.defaults.baseURL + "garbage-list/uploadImage", //上传图片文件地址
       getListUrl: "/garbage-list/getList", //获取的数据的后台接口
@@ -320,6 +323,10 @@ export default {
     this.queryBy();
   },
   methods: {
+    //   返回上一页
+    goBack() {
+      this.$router.go(-1);
+    },
     // 根据条件查询数据
     queryBy() {
       this.data.current = 1;

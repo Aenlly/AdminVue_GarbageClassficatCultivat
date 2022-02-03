@@ -11,7 +11,7 @@ import installElementPlusIcos from './components/ico.js'
 import axios from 'axios'
 import Highcahrts from 'highcharts'
 import HighchartsVue from 'highcharts-vue'
-
+import WangEditor from 'wangeditor';
 
 
 axios.defaults.baseURL = 'http://localhost:8003/api/'
@@ -43,3 +43,4 @@ app.use(HighchartsVue, {
     highcharts: Highcahrts
 })
 app.use(router).mount('#app')
+app.component("v-editor", WangEditor)

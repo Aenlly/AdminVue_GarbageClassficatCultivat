@@ -10,6 +10,7 @@ import IndexGarbageList from '../views/index/IndexGarbageList.vue'
 import GiftManage from '../views/gift/GiftManage.vue'
 import GiftOrders from '../views/gift/GiftOrders.vue'
 import HotInfo from '../views/hotInformation/HotInfo.vue'
+import HotInfoEdit from '../views/hotInformation/HotInfoEdit.vue'
 import WasteTurnTreasure from '../views/wasteTurnTreasure/WasteTurnTreasure.vue'
 import WasteTurnTreasureAudit from '../views/wasteTurnTreasure/WasteTurnTreasureAudit.vue'
 import IntegralRecord from '../views/integral/IntegralRecord.vue'
@@ -85,7 +86,7 @@ const routes = [
         name: 'IndexGarbageList',
         component: IndexGarbageList,
         meta: {
-          title: '垃圾类型数据列表'
+          title: '所属垃圾类型数据列表'
         },
       },
       {
@@ -110,6 +111,14 @@ const routes = [
         component: HotInfo,
         meta: {
           title: '资讯信息管理'
+        },
+      },
+      {
+        path: '/hotInfoEdit',
+        name: 'HotInfoEdit',
+        component: HotInfoEdit,
+        meta: {
+          title: '编辑资讯信息'
         },
       },
       {
