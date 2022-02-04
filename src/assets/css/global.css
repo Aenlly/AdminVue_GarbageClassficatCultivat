@@ -49,3 +49,7 @@ body,
 .el-tabs {
   height: 100%;
 }
+/* 间距控件的大小 */
+.el-space__item {
+  width: 100%;
+}

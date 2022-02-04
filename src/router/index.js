@@ -9,6 +9,7 @@ import IndexGarbageType from '../views/index/IndexGarbageType.vue'
 import IndexGarbageList from '../views/index/IndexGarbageList.vue'
 import GiftManage from '../views/gift/GiftManage.vue'
 import GiftOrders from '../views/gift/GiftOrders.vue'
+import QuestionBankManage from '../views/quiz/QuestionBankManage.vue'
 import HotInfo from '../views/hotInformation/HotInfo.vue'
 import HotInfoCheck from '../views/hotInformation/HotInfoCheck.vue'
 import HotInfoAdd from '../views/hotInformation/HotInfoAdd.vue'
@@ -105,6 +106,14 @@ const routes = [
         component: GiftOrders,
         meta: {
           title: '订单信息管理'
+        },
+      },
+      {
+        path: '/questionBankManage',
+        name: 'QuestionBankManage',
+        component: QuestionBankManage,
+        meta: {
+          title: '题库信息管理'
         },
       },
       {

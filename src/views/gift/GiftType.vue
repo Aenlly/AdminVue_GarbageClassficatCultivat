@@ -98,7 +98,7 @@
   </el-row>
 
   <!-- 新增数据弹窗开始 -->
-  <el-dialog v-model="dialogCreateVisible" title="新增数据" top="5vh">
+  <el-dialog v-model="dialogCreateVisible" title="新增数据">
     <el-row>
       <el-col :span="12" :offset="6">
         <el-form
@@ -172,7 +172,7 @@
   <!-- 新增数据弹窗结束 -->
 
   <!-- 编辑弹窗开始 -->
-  <el-dialog v-model="dialogEditVisible" title="编辑数据" top="5vh">
+  <el-dialog v-model="dialogEditVisible" title="编辑数据">
     <el-row>
       <el-col :span="12" :offset="6">
         <el-form

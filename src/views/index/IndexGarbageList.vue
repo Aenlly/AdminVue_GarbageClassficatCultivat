@@ -293,9 +293,9 @@ export default {
       belongId: this.$route.query.belongId, //上一页面传值所属垃圾类型id
       httpResource: this.$httpResource,
       uploadImageUrl: this.axios.defaults.baseURL + "garbage-list/uploadImage", //上传图片文件地址
-      getListUrl: "/garbage-list/getList", //获取的数据的后台接口
-      delByIdsUrl: "/garbage-list/delByIds", //批量删除的后台接口
-      delByIdUrl: "/garbage-list/delById", //单一删除数据的后台接口
+      getListUrl: "garbage-list/getList", //获取的数据的后台接口
+      delByIdsUrl: "garbage-list/delByIds", //批量删除的后台接口
+      delByIdUrl: "garbage-list/delById", //单一删除数据的后台接口
       createUrl: "garbage-list/create", //新增数据的后台接口
       updateUrl: "garbage-list/update", //修改数据的后台接口
       editVideoList: [],
@@ -399,7 +399,6 @@ export default {
       delete this.edit.garbageLists;
 
       const imgUrl = row.imgUrl.split("/");
-      const videoUrl = row.videoUrl.split("/");
       // 编辑弹窗显示的图片
       this.editImageList[0] = {
         name: imgUrl[imgUrl.length - 1],

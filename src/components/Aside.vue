@@ -102,8 +102,8 @@ export default {
           ico: "el-icon-tickets",
           children: [
             {
-              authName: "题库管理",
-              path: "questionBank",
+              authName: "题库信息管理",
+              path: "questionBankManage",
             },
             {
               authName: "问卷管理",
