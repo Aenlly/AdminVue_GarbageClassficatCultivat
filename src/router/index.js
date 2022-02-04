@@ -10,6 +10,8 @@ import IndexGarbageList from '../views/index/IndexGarbageList.vue'
 import GiftManage from '../views/gift/GiftManage.vue'
 import GiftOrders from '../views/gift/GiftOrders.vue'
 import HotInfo from '../views/hotInformation/HotInfo.vue'
+import HotInfoCheck from '../views/hotInformation/HotInfoCheck.vue'
+import HotInfoAdd from '../views/hotInformation/HotInfoAdd.vue'
 import HotInfoEdit from '../views/hotInformation/HotInfoEdit.vue'
 import WasteTurnTreasure from '../views/wasteTurnTreasure/WasteTurnTreasure.vue'
 import WasteTurnTreasureAudit from '../views/wasteTurnTreasure/WasteTurnTreasureAudit.vue'
@@ -111,6 +113,22 @@ const routes = [
         component: HotInfo,
         meta: {
           title: '资讯信息管理'
+        },
+      },
+      {
+        path: '/hotInfoCheck',
+        name: 'HotInfoCheck',
+        component: HotInfoCheck,
+        meta: {
+          title: '资讯信息详情'
+        },
+      },
+      {
+        path: '/hotInfoAdd',
+        name: 'HotInfoAdd',
+        component: HotInfoAdd,
+        meta: {
+          title: '新增资讯信息'
         },
       },
       {

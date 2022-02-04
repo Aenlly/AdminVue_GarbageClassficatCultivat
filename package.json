@@ -13,6 +13,7 @@
     "element-plus": "^1.0.2-beta.28",
     "highcharts": "^9.3.2",
     "highcharts-vue": "^1.4.0",
+    "mp-html": "^2.2.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "wangeditor": "^4.7.11"

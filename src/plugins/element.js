@@ -2,7 +2,7 @@ import { ElButton, ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOptio
 import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElFooter, ElAside, ElDivider, ElBreadcrumb, ElBreadcrumbItem, ElLink } from 'element-plus'
 import { ElMenu, ElSubmenu, ElMenuItem, ElMenuItemGroup, ElDropdown, ElDropdownMenu, ElDropdownItem, ElPageHeader } from 'element-plus'
 import { ElIcon, ElImage, ElAvatar, ElConfigProvider } from 'element-plus'
-import { ElCard, ElTable, ElTableColumn, ElPagination, ElTabs, ElTabPane } from 'element-plus'
+import { ElCard, ElTable, ElTableColumn, ElPagination, ElTabs, ElTabPane, ElAffix } from 'element-plus'
 import { ElMessage, ElMessageBox, ElTooltip, ElDialog, ElTag, ElPopover } from "element-plus";
 
 // 语言配置在App.vue中
@@ -50,6 +50,7 @@ export default (app) => {
   app.use(ElPagination)
   app.use(ElTabs)
   app.use(ElTabPane)
+  app.use(ElAffix)
 
   //消息提示
   app.config.globalProperties.$message = ElMessage

@@ -7,34 +7,33 @@
 </template>
 
 <script>
-import { onMounted, onBeforeUnmount, ref, toRefs, watch } from "vue";
+import { onMounted, onBeforeUnmount, ref } from "vue";
 import WangEditor from "wangeditor";
 export default {
   props: {
-    html: String,
-    onchangeEditor: {
-      type: Function,
-      default: null,
-    },
-    editorInit: {
-      type: Function,
-      default: null,
+    modelValue: {
+      type: [String, Number],
+      default: "",
     },
   },
   setup(props, content) {
-    var { html } = toRefs(props);
     const editor = ref();
     let instance;
+    // 页面加载时，相对于初始化
     onMounted(() => {
+      // 创建富文本
       instance = new WangEditor(editor.value);
       Object.assign(instance.config, {
         onchange: function (newHtml) {
+          // 调用父方法，进行赋值到表单键值对中
           content.emit("onchangeEditor", newHtml);
         },
       });
       instance.create();
+      // 调用父方法给予富文本对象
       content.emit("editorInit", instance);
     });
+    // 销毁页面时
     onBeforeUnmount(() => {
       instance.destroy();
       instance = null;

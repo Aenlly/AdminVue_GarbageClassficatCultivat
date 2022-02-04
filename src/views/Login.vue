@@ -98,7 +98,7 @@ export default {
           qs.stringify(this.form)
         );
         //判断请求返回值
-        if ((res.code = 500)) {
+        if (res.code == 500) {
           this.$message({
             duration: 2000,
             message: "登录失败，请检查账号和密码!",

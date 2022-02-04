@@ -41,9 +41,7 @@
           </el-col>
           <!-- 搜索区结束 -->
           <el-col :span="2">
-            <el-button type="primary" @click="dialogCreateVisible = true">
-              新增数据
-            </el-button>
+            <el-button type="primary" @click="goCreate"> 新增数据 </el-button>
           </el-col>
           <el-col :span="2">
             <el-button type="danger" @click="deleteByIds">删除所选</el-button>
@@ -120,11 +118,11 @@
                   </el-row>
                   <el-row style="margin-top: 10px">
                     <el-col :span="8">
-                      <el-tooltip content="查看视频" placement="bottom">
+                      <el-tooltip content="预览资讯" placement="bottom">
                         <el-button
                           icon="el-icon-view"
                           size="small"
-                          @click="checkVideo(row.videoUrl)"
+                          @click="goCheck(row.hotInfoId)"
                         ></el-button>
                       </el-tooltip>
                     </el-col>
@@ -134,7 +132,7 @@
                           type="primary"
                           icon="el-icon-edit"
                           size="small"
-                          @click="editById(row.hotInfoId)"
+                          @click="goEdit(row.hotInfoId)"
                         ></el-button>
                       </el-tooltip>
                     </el-col>
@@ -323,8 +321,19 @@ export default {
         })
         .catch(() => {});
     },
+    goCheck(id) {
+      this.$router.push({
+        path: "/hotInfoCheck",
+        query: {
+          id: id,
+        },
+      });
+    },
+    goCreate() {
+      this.$router.push("/hotInfoAdd");
+    },
     // 跳转编辑页面
-    editById(id) {
+    goEdit(id) {
       this.$router.push({
         path: "/hotInfoEdit",
         query: {
