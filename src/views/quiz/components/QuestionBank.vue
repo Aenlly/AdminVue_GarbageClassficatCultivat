@@ -10,11 +10,7 @@
           <el-col :span="6"> </el-col>
           <!-- 搜索区结束 -->
 
-          <el-col :span="2">
-            <el-button type="primary" @click="dialogImportVisible = true">
-              导入题目
-            </el-button>
-          </el-col>
+          <el-col :span="2"> </el-col>
           <el-col :span="2"> </el-col>
         </el-row>
         <!-- 数据区域容器结束 -->
@@ -39,7 +35,7 @@
               <el-table-column prop="subjectCount" label="题目总数" />
               <el-table-column label="操作" fixed="right" width="120">
                 <template #default="{ row }">
-                  <el-tooltip content="查看视频" placement="bottom">
+                  <el-tooltip content="查看题库题目" placement="bottom">
                     <el-button
                       icon="el-icon-view"
                       size="small"
@@ -71,56 +67,6 @@
       <!-- 卡片结束 -->
     </el-col>
   </el-row>
-  <el-dialog title="导入数据" v-model="dialogImportVisible">
-    <el-space direction="vertical" style="width: 100%" :size="50">
-      <el-row>
-        <el-col :span="16" :offset="4">
-          <el-steps :active="stepActive" align-center finish-status="success">
-            <el-step title="上传EXECL" description=""></el-step>
-            <el-step title="导入数据" description=""></el-step>
-            <el-step title="完成导入" description=""></el-step>
-          </el-steps>
-        </el-col>
-      </el-row>
-      <el-row align="center">
-        <el-col :span="24">
-          <el-upload
-            v-model="execl"
-            drag
-            :action="uploadVideoUrl"
-            ref="editUploadVideo"
-            accept=".mp4"
-            name="videoFile"
-            :multiple="false"
-            :file-list="editVideoList"
-            :limit="1"
-            :on-success="editSuccessVideo"
-            :on-error="editErrorVideo"
-            :on-exceed="editExceedVideo"
-            :before-upload="uploadVideo"
-          >
-            <el-icon class="el-icon-upload"></el-icon>
-            <div class="el-upload__text">拖拽文件到此处或<em>点击上传</em></div>
-            <template #tip>
-              <div class="el-upload__tip">大小小于500MB的mp4文件</div>
-            </template>
-          </el-upload>
-        </el-col>
-      </el-row>
-    </el-space>
-    <el-row align="bottom">
-      <el-col :span="24">
-        <span
-          style="font-size: 16px; cursor: pointer; color: #409eff"
-          @click="12"
-          >下载模版</span
-        >
-        <span style="font-size: 16px; color: #5d5d5d">
-          ，请根据模板填充数据后再上传
-        </span>
-      </el-col>
-    </el-row>
-  </el-dialog>
 </template>
 
 <script>
@@ -137,10 +83,8 @@ export default {
         { name: "题库信息管理" },
         { name: "题库信息列表" },
       ],
-      getListUrl: "question-bank/getList", //获取礼品信息的后台接口
+      getListUrl: "question-bank/getList", //获取题库信息的后台接口
       updateUrl: "question-bank/update", //修改数据的后台接口
-      dialogImportVisible: false, //导入弹窗的对话框
-      stepActive: 1, //步骤条的索引
       data: {
         current: 1, //当前页
         size: 10, //每页数据量
@@ -204,6 +148,14 @@ export default {
           this.$message.error("修改数据失败!");
         })
         .catch(() => {});
+    },
+    goCheck(id) {
+      this.$router.push({
+        path: "/subjectList",
+        query: {
+          belongId: id,
+        },
+      });
     },
   },
 };

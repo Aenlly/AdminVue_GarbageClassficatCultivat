@@ -46,7 +46,6 @@
             >
               <el-table-column type="selection" width="55" />
               <el-table-column fixed type="index" label="序号" width="60" />
-
               <el-table-column label="所属垃圾类型" show-overflow-tooltip>
                 <template #default>
                   {{ garbageTypeName }}

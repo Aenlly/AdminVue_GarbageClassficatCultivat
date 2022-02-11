@@ -10,6 +10,7 @@ import IndexGarbageList from '../views/index/IndexGarbageList.vue'
 import GiftManage from '../views/gift/GiftManage.vue'
 import GiftOrders from '../views/gift/GiftOrders.vue'
 import QuestionBankManage from '../views/quiz/QuestionBankManage.vue'
+import SubjectList from '../views/quiz/SubjectList.vue'
 import HotInfo from '../views/hotInformation/HotInfo.vue'
 import HotInfoCheck from '../views/hotInformation/HotInfoCheck.vue'
 import HotInfoAdd from '../views/hotInformation/HotInfoAdd.vue'
@@ -114,6 +115,14 @@ const routes = [
         component: QuestionBankManage,
         meta: {
           title: '题库信息管理'
+        },
+      },
+      {
+        path: '/subjectList',
+        name: 'SubjectList',
+        component: SubjectList,
+        meta: {
+          title: '题目信息列表'
         },
       },
       {
