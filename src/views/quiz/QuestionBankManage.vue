@@ -1,8 +1,8 @@
 <template>
   <el-tabs v-model="activeName" type="border-card" stretch>
-    <el-tab-pane label="题库信息列表" name="QuestionBank"
-      ><QuestionBank
-    /></el-tab-pane>
+    <el-tab-pane label="题库信息列表" name="QuestionBank">
+      <QuestionBank />
+    </el-tab-pane>
     <el-tab-pane label="测验积分排名" name="QuizPoints" lazy>
       <QuizPoints />
     </el-tab-pane>

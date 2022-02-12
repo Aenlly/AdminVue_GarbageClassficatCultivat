@@ -394,16 +394,16 @@
         </el-form>
       </el-col>
     </el-row>
-    <!-- 创建弹窗底部区域 -->
+    <!-- 编辑弹窗底部区域 -->
     <template #footer>
       <span>
         <el-button @click="dialogEditVisible = false">取消</el-button>
         <el-button type="primary" @click="onEdit">确认</el-button>
       </span>
     </template>
-    <!-- 创建弹窗底部区域 -->
+    <!-- 编辑弹窗底部区域 -->
   </el-dialog>
-  <!-- 新增数据弹窗结束 -->
+  <!-- 编辑数据弹窗结束 -->
 </template>
 
 <script>
@@ -738,6 +738,7 @@ export default {
     },
 
     /**新增数据所需方法开始 */
+    // 选择框搜索请求礼品的类型
     async createRemoteMethod(query) {
       this.createLoading = true;
       const { data: res } = await this.axios.get(this.getSelectListByUrl, {

@@ -1,24 +1,30 @@
 <template>
-  <el-dialog title="选项列表" v-model="dialogCheckVisibles">
+  <el-dialog
+    title="选项列表"
+    v-model="dialogCheckVisibles"
+    :before-close="beforeCheckClosed"
+  >
     <el-row>
       <el-col :span="24">
-        <el-table :data="data.records" max-height="550" border stripe>
+        {{ data.records }}
+        <el-table :data="data" max-height="550" border stripe>
           <el-table-column
             label="选项内容"
             prop="optionName"
             show-overflow-tooltip
           ></el-table-column>
-
           <el-table-column label="是否正确答案">
             <template #default="{ row }">
               <el-switch
                 v-model="row.correctlyOrNot"
-                inline-prompt
                 size="large"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
+                active-value="正确"
+                inactive-value="错误"
                 active-text="正确"
                 inactive-text="错误"
+                @change="changeSwitch(row)"
               />
             </template>
           </el-table-column>
@@ -49,36 +55,75 @@
 </template>
 
 <script>
-import { toRefs,onBeforeMount } from "vue";
+import { toRefs } from "vue";
 import qs from "qs";
 
 export default {
+  emits: ["dialogClosed"], // 抛出事件的名称
   props: {
     dialogCheckVisible: Boolean,
     belongId: String,
+    dialogClosed: {
+      type: Function,
+      default: null,
+    },
   },
   data() {
     return {
+      data: [],
       getListUrl: "options-table/getList", //获取题目信息的后台接口
-      updateUrl: "options-table/update",
+      updateUrl: "options-table/update", //修改选项内容
+      updateOffOrOnUrl: "options-table/updateOffOrOnById", //修改答案
       delByIdUrl: "options-table/delById",
     };
+  },
+  watch: {
+    dialogCheckVisibles(val, oldVal) {
+      if (val == true) {
+        this.queryBy();
+      }
+    },
   },
   setup(props) {
     const { dialogCheckVisible: dialogCheckVisibles, belongId: belongIds } =
       toRefs(props);
-      onBeforeMount(()=>{
-// 根据条件查询数据
-    queryBy() {
-      this.getTableList();
-    },
-      })
-    this.queryBy();
     return { dialogCheckVisibles, belongIds };
   },
   // 在创建实例之后调用的钩子，所以用来初始化数据
   methods: {
-    
+    // 关闭弹窗前执行的方法
+    beforeCheckClosed(done) {
+      this.$emit("dialogClosed");
+      done();
+    },
+    // 修改开关
+    async changeSwitch(row) {
+      row.correctlyOrNot == "正确" ? "错误" : "正确";
+      const { data: res } = await this.axios.put(
+        this.updateOffOrOnUrl,
+        qs.stringify(row)
+      );
+      if (res.code == 200) {
+        this.$message.success("修改成功!");
+        // 是否修改成正确答案，是则同时修改其他数据，不再次请求后台
+        if (row.correctlyOrNot == "正确") {
+          for (var i = 0; this.data.length; i++) {
+            if (this.data[i].id == row.id) {
+              continue;
+            } else {
+              this.data[i].correctlyOrNot = "错误";
+            }
+          }
+        }
+      } else {
+        this.$message.error("修改失败!");
+        return false;
+      }
+    },
+    // 根据条件查询数据
+    queryBy() {
+      this.getTableList();
+    },
     // 查询数据
     async getTableList() {
       const { data: res } = await this.axios.get(this.getListUrl, {
@@ -88,7 +133,7 @@ export default {
       });
       // 返回码进行判断
       if (res.code == 200) {
-        this.$data.data = res.data;
+        this.data = res.data;
         this.$message({
           message: "请求数据成功",
           duration: 1500,
@@ -99,6 +144,7 @@ export default {
         this.$message.error("请求数据失败");
       }
     },
+    // 修改选项内容
     onEdit(row) {
       this.$messageBox
         .prompt("请输入修改后的选项", "修改窗口", {
