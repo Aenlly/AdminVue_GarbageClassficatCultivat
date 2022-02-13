@@ -20,7 +20,7 @@
             <el-table
               :data="data.records"
               style="width: 100%"
-              max-height="550"
+              max-height="620"
               border
               stripe
             >
@@ -78,11 +78,7 @@ export default {
   components: { Breadcrumb, Pagination },
   data() {
     return {
-      breadcrumb: [
-        { name: "知识测验管理" },
-        { name: "题库信息管理" },
-        { name: "题库信息列表" },
-      ],
+      breadcrumb: [{ name: "知识测验管理" }, { name: "题库信息管理" }],
       getListUrl: "question-bank/getList", //获取题库信息的后台接口
       updateUrl: "question-bank/update", //修改数据的后台接口
       data: {

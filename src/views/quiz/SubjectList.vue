@@ -1,5 +1,4 @@
 <template>
-  <Breadcrumb :infoTitles="breadcrumb" />
   <el-row>
     <el-col :span="24">
       <!-- 卡片开始 -->
@@ -164,9 +163,7 @@
         </el-col>
       </el-row>
       <el-row align="center" v-if="stepActive == 2" style="height: 300px">
-        <el-col :span="24"
-          ><el-skeleton v-loading="true" element-loading-text="Loading..." />
-        </el-col>
+        <el-col :span="24"> </el-col>
       </el-row>
       <el-row align="center" v-if="stepActive == 3">
         <el-col :span="24">
@@ -315,7 +312,6 @@
 </template>
 
 <script>
-import Breadcrumb from "@/components/Breadcrumb.vue";
 import Pagination from "@/components/Pagination.vue";
 import OptionsList from "@/views/quiz/components/OptionsList";
 import qs from "qs";
@@ -363,14 +359,9 @@ const formRules = {
 };
 
 export default {
-  components: { Breadcrumb, Pagination, OptionsList },
+  components: { Pagination, OptionsList },
   data() {
     return {
-      breadcrumb: [
-        { name: "知识测验管理" },
-        { name: "题库信息管理" },
-        { name: "题库信息列表" },
-      ],
       belongId: this.$route.query.belongId, //上一页面传值所属题库id
       getListUrl: "subject-table/getList", //获取题目信息的后台接口
       uploadExcelFileUrl:
@@ -388,7 +379,7 @@ export default {
       dialogEditVisible: false, //编辑数据的对话框
       dialogCheckVisible: false, //选项数据的弹窗
       titleBelongId: "", //所属题目的编号
-      stepActive: 2, //步骤条的索引
+      stepActive: 1, //步骤条的索引
       text: "", //查询内容
       fileList: [], //上传的文件集合
       formRules: formRules, //创建弹窗的验证规则
@@ -472,6 +463,8 @@ export default {
 
     // 题目导入数据弹窗上传文件成功触发事件
     successFile(response, file, fileList) {
+      // 加载弹窗关闭
+      this.$loading.service().close();
       if (response.code == 200) {
         this.stepActive = 3;
         this.$message.success("导入成功");
@@ -481,6 +474,7 @@ export default {
       }
     },
     progressFile(event, file, fileList) {
+      this.$loading.service({ text: "导入中" });
       this.stepActive = 2;
     },
     // 新建数据弹窗上传文件失败触发事件

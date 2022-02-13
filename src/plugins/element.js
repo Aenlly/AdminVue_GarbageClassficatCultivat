@@ -1,9 +1,9 @@
 import { ElButton, ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOption, ElUpload, ElRadio, ElDatePicker } from 'element-plus'
 import { ElRow, ElCol, ElContainer, ElHeader, ElMain, ElFooter, ElAside, ElDivider, ElBreadcrumb, ElBreadcrumbItem, ElLink } from 'element-plus'
 import { ElMenu, ElSubmenu, ElMenuItem, ElMenuItemGroup, ElDropdown, ElDropdownMenu, ElDropdownItem, ElPageHeader, ElSteps, ElStep } from 'element-plus'
-import { ElIcon, ElImage, ElAvatar, ElConfigProvider, ElSpace, ElSwitch } from 'element-plus'
+import { ElIcon, ElImage, ElAvatar, ElConfigProvider, ElSpace, ElSwitch, ElSkeleton } from 'element-plus'
 import { ElCard, ElTable, ElTableColumn, ElPagination, ElTabs, ElTabPane, ElAffix } from 'element-plus'
-import { ElMessage, ElMessageBox, ElTooltip, ElDialog, ElTag, ElPopover } from "element-plus";
+import { ElMessage, ElMessageBox, ElTooltip, ElDialog, ElTag, ElPopover, ElLoading } from "element-plus";
 
 // 语言配置在App.vue中
 export default (app) => {
@@ -47,6 +47,7 @@ export default (app) => {
   app.use(ElConfigProvider)
   app.use(ElSpace)
   app.use(ElSwitch)
+  app.use(ElSkeleton)
 
   app.use(ElCard)
   app.use(ElTable)
@@ -60,6 +61,8 @@ export default (app) => {
   app.config.globalProperties.$message = ElMessage
   //消息提示弹出框
   app.config.globalProperties.$messageBox = ElMessageBox
+  //加载弹出框
+  app.config.globalProperties.$loading = ElLoading
   // 文字提示
   app.use(ElTooltip)
   app.use(ElDialog)

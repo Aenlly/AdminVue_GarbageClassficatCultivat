@@ -103,19 +103,11 @@ export default {
           children: [
             {
               authName: "题库信息管理",
-              path: "questionBankManage",
+              path: "questionBank",
             },
             {
-              authName: "问卷管理",
+              authName: "问卷信息管理",
               path: "questionnaire",
-            },
-            {
-              authName: "答卷管理",
-              path: "answer",
-            },
-            {
-              authName: "测验排名",
-              path: "user",
             },
           ],
         },

@@ -9,8 +9,10 @@ import IndexGarbageType from '../views/index/IndexGarbageType.vue'
 import IndexGarbageList from '../views/index/IndexGarbageList.vue'
 import GiftManage from '../views/gift/GiftManage.vue'
 import GiftOrders from '../views/gift/GiftOrders.vue'
-import QuestionBankManage from '../views/quiz/QuestionBankManage.vue'
+import QuestionBank from '../views/quiz/QuestionBank.vue'
 import SubjectList from '../views/quiz/SubjectList.vue'
+import Questionnaire from '../views/quiz/Questionnaire.vue'
+import QuestionSheet from '../views/quiz/QuestionSheet.vue'
 import HotInfo from '../views/hotInformation/HotInfo.vue'
 import HotInfoCheck from '../views/hotInformation/HotInfoCheck.vue'
 import HotInfoAdd from '../views/hotInformation/HotInfoAdd.vue'
@@ -110,9 +112,9 @@ const routes = [
         },
       },
       {
-        path: '/questionBankManage',
-        name: 'QuestionBankManage',
-        component: QuestionBankManage,
+        path: '/questionBank',
+        name: 'QuestionBank',
+        component: QuestionBank,
         meta: {
           title: '题库信息管理'
         },
@@ -123,6 +125,22 @@ const routes = [
         component: SubjectList,
         meta: {
           title: '题目信息列表'
+        },
+      },
+      {
+        path: '/questionnaire',
+        name: 'Questionnaire',
+        component: Questionnaire,
+        meta: {
+          title: '问卷信息管理'
+        },
+      },
+      {
+        path: '/questionSheet',
+        name: 'QuestionSheet',
+        component: QuestionSheet,
+        meta: {
+          title: '答卷信息管理'
         },
       },
       {
