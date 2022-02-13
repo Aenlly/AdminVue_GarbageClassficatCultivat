@@ -76,7 +76,6 @@
                 <template #default="{ row }">
                   <el-tooltip content="查看所属垃圾类型数据" placement="bottom">
                     <el-button
-                      type="primary"
                       icon="el-icon-s-unfold"
                       size="small"
                       @click="goBelongList(row.garbageType, row.garbageId)"

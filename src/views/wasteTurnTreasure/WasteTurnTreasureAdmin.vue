@@ -94,48 +94,61 @@
                 </template>
               </el-table-column>
               <el-table-column prop="createTime" label="创建时间" width="160" />
-              <el-table-column label="操作" fixed="right" width="290">
+              <el-table-column label="操作" fixed="right" width="170">
                 <template #default="{ row }">
-                  <el-tooltip content="发布内容" placement="bottom">
-                    <el-button
-                      type="success"
-                      icon="el-icon-circle-plus-outline"
-                      size="small"
-                      @click="publish(row)"
-                    ></el-button>
-                  </el-tooltip>
-                  <el-tooltip content="下架内容" placement="bottom">
-                    <el-button
-                      type="warning"
-                      icon="el-icon-remove-outline"
-                      size="small"
-                      @click="shelf(row)"
-                    ></el-button>
-                  </el-tooltip>
-                  <el-tooltip content="查看视频" placement="bottom">
-                    <el-button
-                      icon="el-icon-view"
-                      size="small"
-                      @click="checkVideo(row.videoUrl)"
-                    ></el-button>
-                  </el-tooltip>
-                  <el-tooltip content="编辑数据" placement="bottom">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-edit"
-                      size="small"
-                      @click="editById(row)"
-                    ></el-button>
-                  </el-tooltip>
-
-                  <el-tooltip content="删除数据" placement="bottom">
-                    <el-button
-                      type="danger"
-                      icon="el-icon-delete"
-                      size="small"
-                      @click="deleteById(row.id)"
-                    ></el-button>
-                  </el-tooltip>
+                  <el-row>
+                    <el-col :span="8">
+                      <el-tooltip content="发布内容" placement="bottom">
+                        <el-button
+                          type="success"
+                          icon="el-icon-circle-plus-outline"
+                          size="small"
+                          @click="publish(row)"
+                        ></el-button>
+                      </el-tooltip>
+                    </el-col>
+                    <el-col :span="8" :offset="8">
+                      <el-tooltip content="下架内容" placement="bottom">
+                        <el-button
+                          type="warning"
+                          icon="el-icon-remove-outline"
+                          size="small"
+                          @click="shelf(row)"
+                        ></el-button>
+                      </el-tooltip>
+                    </el-col>
+                  </el-row>
+                  <el-row style="margin-top: 10px">
+                    <el-col :span="8">
+                      <el-tooltip content="查看视频" placement="bottom">
+                        <el-button
+                          icon="el-icon-view"
+                          size="small"
+                          @click="checkVideo(row.videoUrl)"
+                        ></el-button>
+                      </el-tooltip>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-tooltip content="编辑数据" placement="bottom">
+                        <el-button
+                          type="primary"
+                          icon="el-icon-edit"
+                          size="small"
+                          @click="editById(row)"
+                        ></el-button>
+                      </el-tooltip>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-tooltip content="删除数据" placement="bottom">
+                        <el-button
+                          type="danger"
+                          icon="el-icon-delete"
+                          size="small"
+                          @click="deleteById(row.id)"
+                        ></el-button>
+                      </el-tooltip>
+                    </el-col>
+                  </el-row>
                 </template>
               </el-table-column>
             </el-table>

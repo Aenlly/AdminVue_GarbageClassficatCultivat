@@ -106,41 +106,52 @@
                   </div>
                 </template>
               </el-table-column>
-              <el-table-column label="操作" fixed="right" width="230">
+              <el-table-column label="操作" fixed="right" width="120">
                 <template #default="{ row }">
-                  <el-tooltip content="增加库存" placement="bottom">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-plus"
-                      size="small"
-                      @click="addNumber(row.giftId)"
-                    ></el-button>
-                  </el-tooltip>
-
-                  <el-tooltip content="减少库存" placement="bottom">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-minus"
-                      size="small"
-                      @click="cutNumber(row)"
-                    ></el-button>
-                  </el-tooltip>
-                  <el-tooltip content="编辑数据" placement="bottom">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-edit"
-                      size="small"
-                      @click="editById(row)"
-                    ></el-button>
-                  </el-tooltip>
-                  <el-tooltip content="删除数据" placement="bottom">
-                    <el-button
-                      type="danger"
-                      icon="el-icon-delete"
-                      size="small"
-                      @click="deleteById(row.giftId)"
-                    ></el-button>
-                  </el-tooltip>
+                  <el-row>
+                    <el-col :span="12">
+                      <el-tooltip content="增加库存" placement="bottom">
+                        <el-button
+                          type="success"
+                          icon="el-icon-plus"
+                          size="small"
+                          @click="addNumber(row.giftId)"
+                        ></el-button>
+                      </el-tooltip>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-tooltip content="减少库存" placement="bottom">
+                        <el-button
+                          type="warning"
+                          icon="el-icon-minus"
+                          size="small"
+                          @click="cutNumber(row)"
+                        ></el-button>
+                      </el-tooltip>
+                    </el-col>
+                  </el-row>
+                  <el-row style="margin-top: 10px">
+                    <el-col :span="12">
+                      <el-tooltip content="编辑数据" placement="bottom">
+                        <el-button
+                          type="primary"
+                          icon="el-icon-edit"
+                          size="small"
+                          @click="editById(row)"
+                        ></el-button>
+                      </el-tooltip>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-tooltip content="删除数据" placement="bottom">
+                        <el-button
+                          type="danger"
+                          icon="el-icon-delete"
+                          size="small"
+                          @click="deleteById(row.giftId)"
+                        ></el-button>
+                      </el-tooltip>
+                    </el-col>
+                  </el-row>
                 </template>
               </el-table-column>
             </el-table>

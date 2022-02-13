@@ -72,6 +72,8 @@
                   </el-tooltip>
                 </template>
               </el-table-column>
+              <el-table-column prop="likeCount" label="点赞量" />
+              <el-table-column prop="collectCount" label="收藏量" />
               <el-table-column prop="shareCount" label="分享量" />
               <el-table-column prop="videoCheck" label="状态" width="80" />
               <el-table-column prop="createTime" label="创建时间" width="160" />
@@ -627,9 +629,11 @@ export default {
     editById(row) {
       // 深拷贝，使其不改变表格中的内容
       this.edit = qs.parse(qs.stringify(row));
-      // 在字段中删除创建时间与分享量
+      // 在字段中删除创建时间、分享量、点赞量、收藏量
       delete this.edit.createTime;
       delete this.edit.shareCount;
+      delete this.edit.collectCount;
+      delete this.edit.likeCount;
       const videoImg = row.videoImg.split("/");
       const videoUrl = row.videoUrl.split("/");
       // 显示的图片
