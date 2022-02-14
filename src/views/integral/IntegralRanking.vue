@@ -63,7 +63,6 @@
                 <template #default="{ row }">
                   <el-tooltip content="查看用户积分记录" placement="bottom">
                     <el-button
-                      type="primary"
                       icon="el-icon-view"
                       size="small"
                       @click="pointsView(row.userId)"

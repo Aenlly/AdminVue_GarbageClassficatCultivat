@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Login from '../views/Login.vue'
 import Index from '../views/Index.vue'
-import Statistics from '../views/Statistics.vue'
+import Statistics from '../views/statistics/Statistics.vue'
 import UserList from '../views/user/userList.vue'
 import IndexVideo from '../views/index/IndexVideo.vue'
 import IndexCarousel from '../views/index/IndexCarousel.vue'

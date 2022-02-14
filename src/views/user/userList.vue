@@ -44,20 +44,19 @@
               <el-table-column prop="pointsName" label="头衔名称" />
               <el-table-column label="操作" fixed="right" width="120">
                 <template #default="{ row }">
+                  <el-tooltip content="查看用户积分记录" placement="bottom">
+                    <el-button
+                      icon="el-icon-view"
+                      size="small"
+                      @click="pointsView(row.userId)"
+                    ></el-button>
+                  </el-tooltip>
                   <el-tooltip content="查看用户订单记录" placement="bottom">
                     <el-button
                       type="primary"
                       icon="el-icon-s-order"
                       size="small"
                       @click="orderView(row.userId)"
-                    ></el-button>
-                  </el-tooltip>
-                  <el-tooltip content="查看用户积分记录" placement="bottom">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-view"
-                      size="small"
-                      @click="pointsView(row.userId)"
                     ></el-button>
                   </el-tooltip>
                 </template>
@@ -200,11 +199,13 @@ export default {
         this.$message.error("请求数据失败");
       }
     },
+    // 订单弹窗
     orderView(id) {
       this.id = id;
       this.dialogOrderViewVisible = true;
       this.getOrderTableList(this.orderData.current, this.orderData.size);
     },
+    // 获取订单弹窗表格数据
     async getOrderTableList(current, size) {
       const { data: res } = await this.axios.get(this.getOrderListByIdUrl, {
         params: {
@@ -226,11 +227,13 @@ export default {
         this.$message.error("请求数据失败");
       }
     },
+    // 积分弹窗
     pointsView(id) {
       this.id = id;
       this.dialogPointsVisible = true;
       this.getPointsTableList(this.pointsData.current, this.pointsData.size);
     },
+    // 获取积分弹窗表格数据
     async getPointsTableList(current, size) {
       const { data: res } = await this.axios.get(this.getPointsListByIdUrl, {
         params: {
