@@ -19,6 +19,7 @@ import HotInfoAdd from '../views/hotInformation/HotInfoAdd.vue'
 import HotInfoEdit from '../views/hotInformation/HotInfoEdit.vue'
 import WasteTurnTreasure from '../views/wasteTurnTreasure/WasteTurnTreasure.vue'
 import WasteTurnTreasureAudit from '../views/wasteTurnTreasure/WasteTurnTreasureAudit.vue'
+import IntegralRanking from '../views/integral/IntegralRanking.vue'
 import IntegralRecord from '../views/integral/IntegralRecord.vue'
 import IntegralTitle from '../views/integral/IntegralTitle.vue'
 import SearchLibrary from '../views/search/SearchLibrary.vue'
@@ -189,6 +190,14 @@ const routes = [
         component: WasteTurnTreasureAudit,
         meta: {
           title: '审核管理'
+        },
+      },
+      {
+        path: '/integralRanking',
+        name: 'IntegralRanking',
+        component: IntegralRanking,
+        meta: {
+          title: '积分排名查看'
         },
       },
       {

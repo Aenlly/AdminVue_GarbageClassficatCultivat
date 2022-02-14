@@ -140,6 +140,10 @@ export default {
           ico: "el-icon-coin",
           children: [
             {
+              authName: "积分排名查看",
+              path: "integralRanking",
+            },
+            {
               authName: "积分记录查看",
               path: "integralRecord",
             },
