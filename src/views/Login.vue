@@ -56,8 +56,8 @@ const loginRules = {
     },
     {
       min: 5, //最小长度
-      max: 20, //最大长度
-      message: "长度在 5 至 20 个字符", //提示
+      max: 30, //最大长度
+      message: "长度在 5 至 30 个字符", //提示
       trigger: "blur",
     },
   ],
@@ -109,9 +109,10 @@ export default {
           this.$message.success("登录成功");
           //存储token
           window.sessionStorage.setItem("token", res.data.token);
-          console.log(res.data);
           window.sessionStorage.setItem("id", res.data.id);
           window.sessionStorage.setItem("name", res.data.name);
+          window.sessionStorage.setItem("tel", res.data.tel);
+          window.sessionStorage.setItem("email", res.data.email);
           window.sessionStorage.setItem("imgUrl", res.data.imgUrl);
 
           //跳转页面

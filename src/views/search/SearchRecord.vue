@@ -22,7 +22,7 @@
           </el-col>
           <!-- 搜索区结束 -->
           <el-col :span="2">
-            <el-button type="primary" @click="getgetSearchChart">
+            <el-button type="primary" @click="getSearchChart">
               查看图表
             </el-button>
           </el-col>
@@ -191,6 +191,7 @@ export default {
         this.$message.error("请求数据失败");
       }
     },
+    // 获取搜索类型
     async getListType() {
       const { data: res } = await this.axios.get(this.getListTypeUrl);
       // 返回码进行判断
@@ -200,24 +201,17 @@ export default {
         this.$message.error("请求数据失败");
       }
     },
-    async getgetSearchChart() {
+    // 获取图表信息
+    async getSearchChart() {
       this.dialogChartVisible = true;
       const { data: res } = await this.axios.get(this.getSearchChartUrl);
       // 返回码进行判断
       if (res.code == 200) {
-        const j = res.data.length;
-        console.log(i);
-        var list = [];
-        // categories.
-        for (var i = 0; i < j; i++) {
-          var data = [res.data[i].name, res.data[i].data];
-          list[i] = data;
-        }
+        console.log(res.data);
         this.chartOptions.series[0] = {
           name: "搜索次数",
-          data: list,
+          data: res.data,
         };
-        console.log(res);
       } else {
         this.$message.error("请求数据失败");
       }
