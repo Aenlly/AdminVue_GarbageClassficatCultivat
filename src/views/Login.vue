@@ -111,13 +111,13 @@ export default {
           window.sessionStorage.setItem("token", res.data.token);
           window.sessionStorage.setItem("id", res.data.id);
           window.sessionStorage.setItem("name", res.data.name);
-          window.sessionStorage.setItem("tel", res.data.tel);
-          window.sessionStorage.setItem("email", res.data.email);
           window.sessionStorage.setItem("imgUrl", res.data.imgUrl);
 
           //跳转页面
           this.$router.push("/index");
+          return;
         }
+        this.$message.error("服务器异常!");
       });
     },
   },

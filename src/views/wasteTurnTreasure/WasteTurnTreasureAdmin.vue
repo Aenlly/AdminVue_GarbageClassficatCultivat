@@ -507,7 +507,7 @@ export default {
         imgUrl: "",
         textTag: "",
         videoUrl: "",
-        promulgatorId: window.sessionStorage.getItem("id"),
+        promulgatorId: window.sessionStorage.getItem("token"),
         audit: "已发布",
       },
       textTagList: ["好用", "好看", "好玩"],

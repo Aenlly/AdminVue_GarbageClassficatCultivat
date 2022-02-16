@@ -20,9 +20,7 @@
                 <span>{{ name }}</span>
               </div>
               <el-divider></el-divider>
-              <el-dropdown-item @click="dialogVisible = true"
-                >账号信息</el-dropdown-item
-              >
+              <el-dropdown-item @click="checkDialog">账号信息</el-dropdown-item>
               <el-dropdown-item @click="changePwd"> 修改密码 </el-dropdown-item>
               <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
@@ -171,17 +169,12 @@ export default {
     return {
       name: window.sessionStorage.getItem("name"),
       imgUrl: window.sessionStorage.getItem("imgUrl"),
+      getByTokenUrl: "admin-table/getByToken", //请求管理员信息的后台接口
       changePwdUrl: "admin-table/changePwd", //修改密码的后台接口
       updateUrl: "admin-table/update", //修改数据的后台接口
       dialogVisible: false,
       formRules: formRules,
-      admin: {
-        id: window.sessionStorage.getItem("id"),
-        imgUrl: window.sessionStorage.getItem("imgUrl"),
-        name: window.sessionStorage.getItem("name"),
-        tel: window.sessionStorage.getItem("tel"),
-        email: window.sessionStorage.getItem("email"),
-      },
+      admin: {},
     };
   },
   methods: {
@@ -189,6 +182,7 @@ export default {
     indexClick() {
       this.$router.push("/index");
     },
+
     // 退出登录
     logout() {
       this.$messageBox
@@ -205,6 +199,15 @@ export default {
         })
         .catch(() => {});
     },
+    async checkDialog() {
+      const { data: res } = await this.axios.get(this.getByTokenUrl);
+      if (res.code == 200) {
+        this.admin = res.data;
+        this.dialogVisible = true;
+        return;
+      }
+      this.$message.error("请求管理员信息失败!");
+    },
     changePwd() {
       this.$messageBox
         .prompt("请输入新密码", "修改密码", {
@@ -216,7 +219,6 @@ export default {
         })
         .then(async ({ value }) => {
           const info = {
-            id: window.sessionStorage.getItem("id"),
             password: value,
           };
           const { data: res } = await this.axios.put(
@@ -224,10 +226,9 @@ export default {
             qs.stringify(info)
           );
           if (res.code == 200) {
-            this.$message.success("修改密码成功!");
+            this.$message.success("修改密码成功!请重新登录");
             // 清空本地信息
             window.sessionStorage.clear();
-            this.$message("请重新登录");
             this.$router.push("/login");
             return;
           }
