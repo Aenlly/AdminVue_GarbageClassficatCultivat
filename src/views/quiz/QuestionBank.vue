@@ -106,8 +106,14 @@ export default {
           size: size,
         },
       });
+      if (res.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
       // 返回码进行判断
-      if (res.code == 200) {
+      else if (res.code == 200) {
         this.$data.data = res.data;
         this.$message({
           message: "请求数据成功",
@@ -134,7 +140,14 @@ export default {
             this.updateUrl,
             qs.stringify(info)
           );
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             this.$message.success("修改数据成功!");
             if (res.data === true) {
               this.queryBy();

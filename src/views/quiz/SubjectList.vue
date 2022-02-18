@@ -146,6 +146,7 @@
             accept=".xls"
             name="excelFile"
             :multiple="false"
+            :headers="headersUpload"
             :file-list="fileList"
             :limit="1"
             :on-success="successFile"
@@ -374,6 +375,9 @@ export default {
       delByIdUrl: "subject-table/delById", //单一删除的后台接口
       delByIdsUrl: "subject-table/delByIds", //批量删除的后台接口
       updateUrl: "subject-table/update", //更新请求接口
+      headersUpload: {
+        Authorization: window.sessionStorage.getItem("token"), //文件上传请求头
+      },
       dialogImportVisible: false, //导入弹窗的对话框
       dialogCreateVisible: false, //新增数据的对话框
       dialogEditVisible: false, //编辑数据的对话框
@@ -418,8 +422,14 @@ export default {
           text: this.text,
         },
       });
+      if (res.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
       // 返回码进行判断
-      if (res.code == 200) {
+      else if (res.code == 200) {
         this.$data.data = res.data;
         this.$message({
           message: "请求数据成功",
@@ -465,7 +475,14 @@ export default {
     successFile(response, file, fileList) {
       // 加载弹窗关闭
       this.$loading.service().close();
-      if (response.code == 200) {
+      if (response.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
+      // 返回码进行判断
+      else if (response.code == 200) {
         this.stepActive = 3;
         this.$message.success("导入成功");
       } else {
@@ -523,7 +540,14 @@ export default {
             const { data: res } = await this.axios.delete(this.delByIdsUrl, {
               data: this.selectIds,
             });
-            if ((res.code = 200)) {
+            if (res.code == 403) {
+              // 清空本地信息
+              window.sessionStorage.clear();
+              this.$message("登录已过期");
+              this.$router.push("/login");
+            }
+            // 返回码进行判断
+            else if (res.code == 200) {
               this.$message.success("删除成功!");
               this.queryBy();
             } else {
@@ -563,7 +587,14 @@ export default {
             this.createOptionUrl,
             qs.stringify(info)
           );
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             if (res.data === true) {
               this.$message.success("新增数据成功!");
               return;
@@ -585,7 +616,14 @@ export default {
             this.createUrl,
             qs.stringify(this.create)
           );
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             this.$message.success("新增数据成功!");
             if (res.data === true) {
               // 重置表单与清除上传的文件
@@ -612,7 +650,14 @@ export default {
             this.updateUrl,
             qs.stringify(this.edit)
           );
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             if (res.data === true) {
               this.$message.success("保存数据成功!");
               // 关闭弹窗
@@ -641,7 +686,14 @@ export default {
               id: id,
             },
           });
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             this.$message.success("删除成功!");
             this.queryBy();
           } else {

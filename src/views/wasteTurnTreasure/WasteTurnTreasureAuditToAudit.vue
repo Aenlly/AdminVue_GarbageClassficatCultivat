@@ -198,8 +198,14 @@ export default {
           isUserUpload: this.isUserUpload,
         },
       });
+      if (res.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
       // 返回码进行判断
-      if (res.code == 200) {
+      else if (res.code == 200) {
         this.$data.data = res.data;
         this.$message({
           message: "请求数据成功",
@@ -253,7 +259,12 @@ export default {
       const { data: res } = await this.axios.put(
         "/waste-turn-treasure" + url + "/" + id
       );
-      if ((res.code = 200)) {
+      if (res.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      } else if (res.code == 200) {
         this.$message.success("操作成功");
         this.queryBy();
         this.dialogCheckVisible = false;

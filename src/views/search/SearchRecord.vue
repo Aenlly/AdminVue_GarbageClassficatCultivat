@@ -178,8 +178,14 @@ export default {
           type: this.type,
         },
       });
+      if (res.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
       // 返回码进行判断
-      if (res.code == 200) {
+      else if (res.code == 200) {
         this.$data.data = res.data;
         this.$message({
           message: "请求数据成功",
@@ -194,8 +200,14 @@ export default {
     // 获取搜索类型
     async getListType() {
       const { data: res } = await this.axios.get(this.getListTypeUrl);
+      if (res.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
       // 返回码进行判断
-      if (res.code == 200) {
+      else if (res.code == 200) {
         this.listType = res.data; //赋值搜索类型
       } else {
         this.$message.error("请求数据失败");
@@ -205,8 +217,14 @@ export default {
     async getSearchChart() {
       this.dialogChartVisible = true;
       const { data: res } = await this.axios.get(this.getSearchChartUrl);
+      if (res.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
       // 返回码进行判断
-      if (res.code == 200) {
+      else if (res.code == 200) {
         console.log(res.data);
         this.chartOptions.series[0] = {
           name: "搜索次数",

@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import Aenlly from '../views/Aenlly.vue'
 import Login from '../views/Login.vue'
 import Index from '../views/Index.vue'
 import Statistics from '../views/statistics/Statistics.vue'
@@ -29,12 +30,20 @@ import { ElMessage } from "element-plus";
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    redirect: "/index",
+    name: 'Aenlly',
+    component: Aenlly,
     meta: {
       title: '首页',
     }
   },
+  // {
+  //   path: '/',
+  //   name: 'Home',
+  //   redirect: "/index",
+  //   meta: {
+  //     title: '首页',
+  //   }
+  // },
   {
     path: '/login',
     name: 'Login',
@@ -247,7 +256,9 @@ router.beforeEach((to, from, next) => {
   document.title = to.meta.title
   //获取token，用于判断是否登录
   const tokenStr = window.sessionStorage.getItem('token')
-
+  if (to.path === '/') {
+    return next()
+  }
   if (to.path === '/login') {
     //存在token则跳转至首页
     if (tokenStr) {

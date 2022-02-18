@@ -127,6 +127,7 @@
               accept=".jpg,.png,.jpeg"
               name="imageFile"
               ref="createUploadImage"
+              :headers="headersUpload"
               :on-success="createSuccessImage"
               :on-error="createErrorImage"
               :on-exceed="createExceedImage"
@@ -202,6 +203,7 @@
               name="imageFile"
               :limit="1"
               ref="editUploadImage"
+              :headers="headersUpload"
               :file-list="editImageList"
               :on-success="editSuccessImage"
               :on-error="editErrorImage"
@@ -289,6 +291,9 @@ export default {
       delByIdUrl: "/gift-type/delById", //单一删除数据的后台接口
       createUrl: "gift-type/create", //新增数据的后台接口
       updateUrl: "gift-type/update", //修改数据的后台接口
+      headersUpload: {
+        Authorization: window.sessionStorage.getItem("token"), //文件上传请求头
+      },
       dialogCreateVisible: false, //创建数据的对话框
       dialogEditVisible: false, //编辑数据的对话框
       editImageList: [],
@@ -326,8 +331,14 @@ export default {
           text: this.text,
         },
       });
+      if (res.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
       // 返回码进行判断
-      if (res.code == 200) {
+      else if (res.code == 200) {
         this.$data.data = res.data;
         this.$message({
           message: "请求数据成功",
@@ -360,7 +371,14 @@ export default {
             const { data: res } = await this.axios.delete(this.delByIdsUrl, {
               data: this.selectIds,
             });
-            if ((res.code = 200)) {
+            if (res.code == 403) {
+              // 清空本地信息
+              window.sessionStorage.clear();
+              this.$message("登录已过期");
+              this.$router.push("/login");
+            }
+            // 返回码进行判断
+            else if (res.code == 200) {
               this.$message.success("删除成功!");
               this.queryBy();
             } else {
@@ -402,7 +420,14 @@ export default {
               id: id,
             },
           });
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             this.$message.success("删除成功!");
             this.queryBy();
           } else {
@@ -415,7 +440,14 @@ export default {
     /**新增数据所需方法开始 */
     // 新建数据弹窗上传图片成功触发事件
     createSuccessImage(response, file, fileList) {
-      if (response.code == 200) {
+      if (response.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
+      // 返回码进行判断
+      else if (response.code == 200) {
         file.url = this.httpResource + response.data;
         this.create.imgUrl = response.data;
         this.$message.success("上传图片成功");
@@ -463,7 +495,14 @@ export default {
             this.createUrl,
             qs.stringify(this.create)
           );
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             this.$message.success("新增数据成功!");
             if (res.data === true) {
               this.dialogCreateVisible = false;
@@ -499,7 +538,14 @@ export default {
     // 编辑数据所需方法开始
     // 编辑数据弹窗上传图片成功触发事件
     editSuccessImage(response, file, fileList) {
-      if (response.code == 200) {
+      if (response.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
+      // 返回码进行判断
+      else if (response.code == 200) {
         file.url = this.httpResource + response.data;
         this.edit.imgUrl = response.data;
         this.$message.success("上传图片成功");
@@ -550,7 +596,14 @@ export default {
             this.updateUrl,
             qs.stringify(this.edit)
           );
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             if (res.data === true) {
               this.$message.success("保存数据成功!");
               // 关闭弹窗

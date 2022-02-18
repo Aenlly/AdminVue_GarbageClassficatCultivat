@@ -59,6 +59,7 @@
                   name="imageFile"
                   :limit="1"
                   ref="createUploadImage"
+                  :headers="headersUpload"
                   :file-list="createImageList"
                   :on-success="createSuccessImage"
                   :on-error="createErrorImage"
@@ -194,6 +195,9 @@ export default {
       httpResource: this.$httpResource,
       uploadImageUrl: this.axios.defaults.baseURL + "hot-info/uploadImage", //上传图片文件地址
       createUrl: "hot-info/create",
+      headersUpload: {
+        Authorization: window.sessionStorage.getItem("token"), //文件上传请求头
+      },
       createImageList: [],
       formRules: formRules, //创建弹窗的验证规则
       create: {
@@ -231,7 +235,14 @@ export default {
     // 上传所需方法开始
     // 上传图片成功触发事件
     createSuccessImage(response, file, fileList) {
-      if (response.code == 200) {
+      if (response.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
+      // 返回码进行判断
+      else if (response.code == 200) {
         file.url = this.httpResource + response.data;
         this.create.imgUrl = response.data;
         this.$message.success("上传图片成功");
@@ -281,7 +292,14 @@ export default {
             this.createUrl,
             qs.stringify(this.create)
           );
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             if (res.data === true) {
               this.$message.success("新增数据成功!");
               // 刷新数据

@@ -57,6 +57,7 @@
                   name="imageFile"
                   :limit="1"
                   ref="editUploadImage"
+                  :headers="headersUpload"
                   :file-list="editImageList"
                   :on-success="editSuccessImage"
                   :on-error="editErrorImage"
@@ -193,6 +194,9 @@ export default {
       uploadImageUrl: this.axios.defaults.baseURL + "hot-info/uploadImage", //上传图片文件地址
       updateUrl: "hot-info/update",
       getByIdUrl: "hot-info/getById/",
+      headersUpload: {
+        Authorization: window.sessionStorage.getItem("token"), //文件上传请求头
+      },
       editImageList: [],
       formRules: formRules, //创建弹窗的验证规则
       edit: {},
@@ -217,7 +221,14 @@ export default {
     // 根据id获取编辑数据
     async getById(id) {
       const { data: res } = await this.axios.get(this.getByIdUrl + id);
-      if (res.code == 200) {
+      if (res.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
+      // 返回码进行判断
+      else if (res.code == 200) {
         this.edit = res.data;
         const imgUrl = res.data.imgUrl.split("/");
         // 显示的图片
@@ -249,7 +260,14 @@ export default {
     // 编辑数据所需方法开始
     // 编辑数据弹窗上传图片成功触发事件
     editSuccessImage(response, file, fileList) {
-      if (response.code == 200) {
+      if (response.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
+      // 返回码进行判断
+      else if (response.code == 200) {
         file.url = this.httpResource + response.data;
         this.edit.imgUrl = response.data;
         this.$message.success("上传图片成功");
@@ -298,7 +316,14 @@ export default {
             this.updateUrl,
             qs.stringify(this.edit)
           );
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             if (res.data === true) {
               this.$message.success("保存数据成功!");
               // 刷新数据

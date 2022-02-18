@@ -201,7 +201,14 @@ export default {
     },
     async checkDialog() {
       const { data: res } = await this.axios.get(this.getByTokenUrl);
-      if (res.code == 200) {
+      if (res.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
+      // 返回码进行判断
+      else if (res.code == 200) {
         this.admin = res.data;
         this.dialogVisible = true;
         return;
@@ -225,7 +232,14 @@ export default {
             this.changePwdUrl,
             qs.stringify(info)
           );
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             this.$message.success("修改密码成功!请重新登录");
             // 清空本地信息
             window.sessionStorage.clear();
@@ -248,7 +262,14 @@ export default {
             this.updateUrl,
             qs.stringify(this.admin)
           );
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             if (res.data === 200) {
               this.$message.success("修改数据成功!");
               window.sessionStorage.setItem("name", this.admin.name);

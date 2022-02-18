@@ -104,6 +104,7 @@ export default {
             message: "登录失败，请检查账号和密码!",
             type: "error",
           });
+          return;
         } else {
           //提示
           this.$message.success("登录成功");

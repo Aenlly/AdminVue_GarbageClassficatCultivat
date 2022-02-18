@@ -180,6 +180,7 @@
               name="imageFile"
               :limit="1"
               ref="editUploadImage"
+              :headers="headersUpload"
               :file-list="editImageList"
               :on-success="editSuccessImage"
               :on-error="editErrorImage"
@@ -222,6 +223,7 @@
               accept=".mp4"
               name="videoFile"
               :multiple="false"
+              :headers="headersUpload"
               :file-list="editVideoList"
               :limit="1"
               :on-success="editSuccessVideo"
@@ -338,6 +340,9 @@ export default {
       uploadImageUrl: this.axios.defaults.baseURL + "garbage/uploadImage", //上传图片文件地址
       getListUrl: "/garbage/getList", //获取的数据的后台接口
       updateUrl: "garbage/update", //修改数据的后台接口
+      headersUpload: {
+        Authorization: window.sessionStorage.getItem("token"), //文件上传请求头
+      },
       editVideoList: [],
       editImageList: [],
       checkVideoUrl: "", //查看的视频url地址
@@ -373,8 +378,14 @@ export default {
           text: this.text,
         },
       });
+      if (res.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
       // 返回码进行判断
-      if (res.code == 200) {
+      else if (res.code == 200) {
         this.$data.data = res.data;
         this.$message({
           message: "请求数据成功",
@@ -447,7 +458,14 @@ export default {
     // 编辑数据所需方法开始
     // 编辑数据弹窗上传图片成功触发事件
     editSuccessImage(response, file, fileList) {
-      if (response.code == 200) {
+      if (response.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
+      // 返回码进行判断
+      else if (response.code == 200) {
         file.url = this.httpResource + response.data;
         this.edit.imgUrl = response.data;
         this.$message.success("上传图片成功");
@@ -488,7 +506,14 @@ export default {
 
     // 编辑数据弹窗上传视频文件成功触发事件
     editSuccessVideo(response, file, fileList) {
-      if (response.code == 200) {
+      if (response.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
+      // 返回码进行判断
+      else if (response.code == 200) {
         file.url = this.httpResource + response.data;
         this.edit.videoUrl = response.data;
         this.$message.success("上传视频成功");
@@ -536,7 +561,14 @@ export default {
             this.updateUrl,
             qs.stringify(this.edit)
           );
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             if (res.data === true) {
               this.$message.success("保存数据成功!");
               // 关闭弹窗
@@ -550,6 +582,7 @@ export default {
         }
       });
     },
+    // 跳转至垃圾条目
     goBelongList(garbageType, garbageId) {
       this.$router.push({
         path: "/indexGarbageList",

@@ -254,8 +254,14 @@ export default {
           text: this.text,
         },
       });
+      if (res.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
       // 返回码进行判断
-      if (res.code == 200) {
+      else if (res.code == 200) {
         this.$data.data = res.data;
         this.$message({
           message: "请求数据成功",
@@ -289,7 +295,14 @@ export default {
             const { data: res } = await this.axios.delete(this.delByIdsUrl, {
               data: this.selectIds,
             });
-            if ((res.code = 200)) {
+            if (res.code == 403) {
+              // 清空本地信息
+              window.sessionStorage.clear();
+              this.$message("登录已过期");
+              this.$router.push("/login");
+            }
+            // 返回码进行判断
+            else if (res.code == 200) {
               this.$message.success("删除成功!");
               this.queryBy();
             } else {
@@ -326,7 +339,14 @@ export default {
               id: id,
             },
           });
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             this.$message.success("删除成功!");
             this.queryBy();
           } else {
@@ -338,8 +358,14 @@ export default {
 
     async getListType() {
       const { data: res } = await this.axios.get(this.getListTypeUrl);
+      if (res.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
       // 返回码进行判断
-      if (res.code == 200) {
+      else if (res.code == 200) {
         this.listType = res.data; //赋值搜索类型
         console.log(this.listType);
       } else {
@@ -360,7 +386,14 @@ export default {
             this.createUrl,
             qs.stringify(this.create)
           );
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             this.$message.success("新增数据成功!");
             if (res.data == true) {
               this.dialogCreateVisible = false;
@@ -387,7 +420,14 @@ export default {
             this.updateUrl,
             qs.stringify(this.edit)
           );
-          if (res.code == 200) {
+          if (res.code == 403) {
+            // 清空本地信息
+            window.sessionStorage.clear();
+            this.$message("登录已过期");
+            this.$router.push("/login");
+          }
+          // 返回码进行判断
+          else if (res.code == 200) {
             if (res.data === true) {
               this.$message.success("保存数据成功!");
               // 关闭弹窗

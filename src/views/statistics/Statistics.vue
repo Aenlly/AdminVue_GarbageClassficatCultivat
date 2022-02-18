@@ -178,8 +178,14 @@ export default {
           timeType: this.timeType,
         },
       });
+      if (res.code == 403) {
+        // 清空本地信息
+        window.sessionStorage.clear();
+        this.$message("登录已过期");
+        this.$router.push("/login");
+      }
       // 返回码进行判断
-      if (res.code == 200) {
+      else if (res.code == 200) {
         // 设置柱状图数据
         this.chartOptions.series[0].data = res.data.columnChart;
         // 获取饼图数据长度
