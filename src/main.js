@@ -14,7 +14,8 @@ import HighchartsVue from 'highcharts-vue'
 import WangEditor from 'wangeditor';
 
 
-axios.defaults.baseURL = 'http://localhost:8003/api/'
+// axios.defaults.baseURL = 'https://localhost:8003/api/'//本地接口
+axios.defaults.baseURL = 'https://www.aenlly.top:8003/api/' //远程接口
 
 /**
  * 添加请求头
@@ -28,7 +29,7 @@ const app = createApp(App)
 //3.0中使用该语句定义全局
 app.config.globalProperties.axios = axios
 
-app.config.globalProperties.$httpResource = "http://localhost:8004"
+app.config.globalProperties.$httpResource = "http://www.aenlly.top:8004"
 
 // 进行全局配置
 Highcahrts.setOptions({

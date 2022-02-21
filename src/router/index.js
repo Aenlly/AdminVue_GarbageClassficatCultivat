@@ -30,20 +30,20 @@ import { ElMessage } from "element-plus";
 const routes = [
   {
     path: '/',
+    name: 'Home',
+    redirect: "/aenlly",
+    meta: {
+      title: '首页',
+    }
+  },
+  {
+    path: '/aenlly',
     name: 'Aenlly',
     component: Aenlly,
     meta: {
       title: '首页',
     }
   },
-  // {
-  //   path: '/',
-  //   name: 'Home',
-  //   redirect: "/index",
-  //   meta: {
-  //     title: '首页',
-  //   }
-  // },
   {
     path: '/login',
     name: 'Login',
