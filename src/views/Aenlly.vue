@@ -126,7 +126,7 @@ export default {
               children: [
                 {
                   authName: "进入项目",
-                  path: "http://www.aenlly.top/login",
+                  path: "https://www.aenlly.top/#/login",
                   children: [],
                 },
                 {

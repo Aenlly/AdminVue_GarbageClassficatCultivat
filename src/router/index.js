@@ -248,6 +248,7 @@ const routes = [
 
 const router = createRouter({
   history: createWebHashHistory(),
+  mode: 'history',
   routes
 })
 //路由导航守卫，to代表访问路径，from代表从那个路径跳转过来，next函数用于放行
@@ -257,6 +258,10 @@ router.beforeEach((to, from, next) => {
   //获取token，用于判断是否登录
   const tokenStr = window.sessionStorage.getItem('token')
   if (to.path === '/') {
+    return next()
+  }
+  // 放行个人主页
+  if (to.path === '/aenlly') {
     return next()
   }
   if (to.path === '/login') {
