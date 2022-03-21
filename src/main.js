@@ -28,7 +28,7 @@ axios.interceptors.request.use(config => {
 const app = createApp(App)
 //3.0中使用该语句定义全局
 app.config.globalProperties.axios = axios
-
+// 资源请求地址
 app.config.globalProperties.$httpResource = "https://www.aenlly.top:8004"
 
 // 进行全局配置

@@ -9,10 +9,10 @@
       <el-col :span="24">
         <!-- unique-opened每次只打开一个菜单，default-active默认选择,collapse-transition关闭折叠动画,router开启路由 -->
         <el-menu
-          active-text-color="#409eff"
-          background-color="#545c64"
+          active-text-color="#001528"
+          background-color="#304156"
           :default-active="activeState"
-          text-color="#fff"
+          text-color="rgb(191, 203, 217)"
           :collapse="isCollapse"
           :collapse-transition="false"
           unique-opened
@@ -189,7 +189,7 @@ export default {
 
 <style lang="less" scoped>
 .el-aside {
-  background-color: #545c64;
+  background-color: #304156;
   height: 100%;
 }
 .toggle-col {

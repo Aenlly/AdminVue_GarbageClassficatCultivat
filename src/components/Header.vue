@@ -297,7 +297,7 @@ export default {
 
 <style lang="less" scoped>
 .el-header {
-  background-color: #373d41;
+  background-color: #1f2d3d;
   display: flex;
   justify-content: space-between;
   align-items: center;
