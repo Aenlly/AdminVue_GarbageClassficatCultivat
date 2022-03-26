@@ -9,7 +9,7 @@
       <el-col :span="24">
         <!-- unique-opened每次只打开一个菜单，default-active默认选择,collapse-transition关闭折叠动画,router开启路由 -->
         <el-menu
-          active-text-color="#001528"
+          active-text-color="#409eff"
           background-color="#304156"
           :default-active="activeState"
           text-color="rgb(191, 203, 217)"

@@ -5,15 +5,15 @@
         <div class="login_box">
           <!-- 登录表单开始，ref代表表单的引用对象 -->
           <el-form ref="formRef" :model="form" :rules="loginRules">
-            <el-form-item>
+            <el-form-item style="text-align: center">
               <span class="long_title"> 登&nbsp;&nbsp;录 </span>
             </el-form-item>
             <el-form-item prop="username">
               <el-input placeholder="请输入手机号/邮箱" v-model="form.username">
                 <template #prefix>
-                  <el-icon class="el-input__icon" color="#9b9b9b"
-                    ><user-filled
-                  /></el-icon>
+                  <el-icon class="el-input__icon" color="#9b9b9b">
+                    <user-filled />
+                  </el-icon>
                 </template>
               </el-input>
             </el-form-item>
@@ -105,7 +105,7 @@ export default {
             type: "error",
           });
           return;
-        } else {
+        } else if (res.data == 200) {
           //提示
           this.$message.success("登录成功");
           //存储token
