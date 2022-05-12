@@ -16,6 +16,7 @@ import WangEditor from 'wangeditor';
 
 // axios.defaults.baseURL = 'https://localhost:8003/api/'//本地接口
 axios.defaults.baseURL = 'https://www.aenlly.top:8003/api/' //远程接口
+// axios.defaults.baseURL = 'https://192.168.93.128:8003/api/'//虚拟机接口
 
 /**
  * 添加请求头
@@ -30,6 +31,7 @@ const app = createApp(App)
 app.config.globalProperties.axios = axios
 // 资源请求地址
 app.config.globalProperties.$httpResource = "https://www.aenlly.top:8004"
+// app.config.globalProperties.$httpResource = "https://192.168.93.128:8004"
 
 // 进行全局配置
 Highcahrts.setOptions({

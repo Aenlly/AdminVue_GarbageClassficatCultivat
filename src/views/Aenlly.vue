@@ -127,6 +127,8 @@ export default {
                 {
                   authName: "进入项目",
                   path: "https://www.aenlly.top/#/login",
+                  // path: "http://192.168.93.128/#/login",
+                  // path: "http:127.0.0.1/#/login",
                   children: [],
                 },
                 {

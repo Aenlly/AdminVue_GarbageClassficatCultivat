@@ -168,6 +168,7 @@
               accept=".jpg,.png,.jpeg"
               name="imageFile"
               ref="createUploadImage"
+              :headers="headersUpload"
               :on-success="createSuccessImage"
               :on-error="createErrorImage"
               :on-exceed="createExceedImage"
@@ -240,6 +241,7 @@
               name="imageFile"
               :limit="1"
               ref="editUploadImage"
+              :headers="headersUpload"
               :file-list="editImageList"
               :on-success="editSuccessImage"
               :on-error="editErrorImage"
@@ -339,6 +341,9 @@ export default {
       text: "", //查询内容
       dialogCreateVisible: false, //创建数据的对话框
       dialogEditVisible: false, //编辑数据的对话框
+      headersUpload: {
+        Authorization: window.sessionStorage.getItem("token"), //文件上传请求头
+      },
       edit: {},
       create: {
         name: "",

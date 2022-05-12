@@ -106,7 +106,7 @@
           ref="createForm"
           :rules="formRules"
           label-position="right"
-          label-width="100px"
+          label-width="150px"
         >
           <el-form-item label="类型名称" prop="typeName">
             <el-input
@@ -158,6 +158,17 @@
               </template>
             </el-upload>
           </el-form-item>
+          <el-form-item label="是否用于用户筛选" prop="type">
+            <el-select v-model="create.giftShow" placeholder="请选择">
+              <el-option
+                v-for="item in giftShowList"
+                :key="item"
+                :value="item"
+                :label="item"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
       </el-col>
     </el-row>
@@ -181,7 +192,7 @@
           :rules="formRules"
           ref="editForm"
           label-position="right"
-          label-width="100px"
+          label-width="150px"
         >
           <el-form-item label="类型名称" prop="typeName">
             <el-input
@@ -234,6 +245,17 @@
                 <div class="el-upload__tip">仅支持jpg/jpeg/png格式图片</div>
               </template>
             </el-upload>
+          </el-form-item>
+          <el-form-item label="是否用于用户筛选" prop="type">
+            <el-select v-model="edit.giftShow" placeholder="请选择">
+              <el-option
+                v-for="item in giftShowList"
+                :key="item"
+                :value="item"
+                :label="item"
+              >
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </el-col>
@@ -297,6 +319,7 @@ export default {
       dialogCreateVisible: false, //创建数据的对话框
       dialogEditVisible: false, //编辑数据的对话框
       editImageList: [],
+      giftShowList: ["是", "否"],
       text: "",
       edit: {},
       data: {
@@ -306,9 +329,9 @@ export default {
       },
       formRules: formRules, //创建弹窗的验证规则
       create: {
-        giftName: "",
-        giftDesc: "",
-        typeId: "",
+        typeName: "",
+        imgUrl: "",
+        giftShow: "否",
       },
     };
   },

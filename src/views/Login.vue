@@ -105,7 +105,7 @@ export default {
             type: "error",
           });
           return;
-        } else if (res.data == 200) {
+        } else if (res.code == 200) {
           //提示
           this.$message.success("登录成功");
           //存储token
