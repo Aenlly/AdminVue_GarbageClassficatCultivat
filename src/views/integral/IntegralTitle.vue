@@ -112,7 +112,7 @@
           <el-form-item label="所需积分" prop="pointsRequire">
             <el-input-number
               v-model="create.pointsRequire"
-              :min="1"
+              :min="0"
               placeholder="请输入头衔所需积分"
               style="width: 230px"
             />
@@ -153,7 +153,7 @@
           <el-form-item label="所需积分" prop="pointsRequire">
             <el-input-number
               v-model="edit.pointsRequire"
-              :min="1"
+              :min="0"
               placeholder="请输入头衔所需积分"
               style="width: 230px"
             />

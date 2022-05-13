@@ -31,6 +31,7 @@ const app = createApp(App)
 app.config.globalProperties.axios = axios
 // 资源请求地址
 app.config.globalProperties.$httpResource = "https://www.aenlly.top:8004"
+// app.config.globalProperties.$httpResource = "https://localhost:8004"
 // app.config.globalProperties.$httpResource = "https://192.168.93.128:8004"
 
 // 进行全局配置
